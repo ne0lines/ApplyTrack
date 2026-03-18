@@ -3,8 +3,8 @@ import { Pipeline } from "@/components/dashboard";
 
 export default async function Home() {
   return (
-    <main className="grid min-h-screen place-items-center p-4 sm:p-5">
-      <section className="w-full max-w-3xl rounded-3xl border border-app-stroke bg-app-surface p-5 shadow-sm sm:p-8">
+    <main className="container mx-auto grid min-h-screen place-items-center p-4 sm:p-5">
+      <section className="rounded-3xl border border-app-stroke bg-app-surface p-5 shadow-sm sm:p-8">
         <div className="flex items-center justify-between gap-3">
           <h1 className="grid">
             <span className="font-display text-5xl leading-none sm:text-6xl">
@@ -14,7 +14,7 @@ export default async function Home() {
               Översikt över sökta jobb
             </span>
           </h1>
-          <Btn href="/jobb/new">Lägg till ansökan</Btn>
+          <Btn href="/jobb/new">Lägg till jobb</Btn>
         </div>
         <Pipeline />
 
