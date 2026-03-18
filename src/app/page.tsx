@@ -1,7 +1,7 @@
 import { Btn } from "@/components/ui/btn";
 import { Pipeline } from "@/components/dashboard";
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className="grid min-h-screen place-items-center p-4 sm:p-5">
       <section className="w-full max-w-3xl rounded-3xl border border-app-stroke bg-app-surface p-5 shadow-sm sm:p-8">
