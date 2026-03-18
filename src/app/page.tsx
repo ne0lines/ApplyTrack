@@ -14,7 +14,7 @@ export default function Home() {
               Översikt över sökta jobb
             </span>
           </h1>
-          <Btn href="/jobb/new">Lägg till ansökan</Btn>
+          <Btn href="/jobb/new">Lägg till jobb</Btn>
         </div>
 
         <h2 className="mt-6 mb-3 font-display text-4xl">Pipeline</h2>
