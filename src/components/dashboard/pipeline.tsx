@@ -44,7 +44,7 @@ export default async function Pipeline() {
 
         <Board
           jobs={offers}
-          label={"Erbjudanden"}
+          label={"Erbjudande"}
           borderColor="border-green-400"
           bgColor="bg-green-100"
         />
