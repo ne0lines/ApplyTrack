@@ -72,7 +72,7 @@ export function ReportPageClient({ jobs, options }: Readonly<ReportPageClientPro
 
   if (options.length === 0) {
     return (
-      <main className="min-h-screen p-4 pt-20 sm:p-5">
+      <main className="min-h-screen p-4 pt-0">
         <section className="mx-auto flex w-full max-w-3xl flex-col gap-4 p-5 sm:p-8">
           <h1 className="font-display text-4xl sm:text-5xl">Aktivitetsrapport</h1>
           <p className="text-lg text-app-muted">
@@ -87,8 +87,8 @@ export function ReportPageClient({ jobs, options }: Readonly<ReportPageClientPro
   }
 
   return (
-    <main className="min-h-screen p-4 pt-20 sm:p-5">
-      <section className="mx-auto flex w-full max-w-3xl flex-col gap-4 p-5 sm:p-8">
+    <main className="min-h-screen p-4 pt-0">
+      <section className="mx-auto flex w-full max-w-3xl flex-col gap-4">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="font-display text-4xl sm:text-5xl">Aktivitetsrapport</h1>
@@ -121,7 +121,7 @@ export function ReportPageClient({ jobs, options }: Readonly<ReportPageClientPro
               <div className="flex flex-col">
                 <div className="flex items-center justify-between gap-4">
                   <CopyTrigger
-                    className="font-display text-left text-xl transition hover:text-app-primary"
+                    className="font-display text-left text-base font-bold transition truncate hover:text-app-primary"
                     onClick={() => void copyTextToClipboard(job.title)}
                   >
                     {job.title}

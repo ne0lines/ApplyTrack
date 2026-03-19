@@ -21,7 +21,7 @@ export default function({
       <h3 className="mb-2 text-xl font-display">{label}</h3>
       <ul className="space-y-4">
         {jobs.map((j) => (
-          <li key={`saved-${j.title.split(" ").join("-")}`}>
+          <li key={`saved-${j.id}`}>
             <Link
               href={`/jobb/${j.id}`}
               className={`${borderColor} block rounded-2xl border bg-white p-4`}
