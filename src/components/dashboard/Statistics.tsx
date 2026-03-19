@@ -114,12 +114,15 @@ export function Statistics({ applications }: StatisticsProps) {
             </strong>
             <span className='text-base text-app-muted'>Avslutade</span>
           </article>
+
+          {/*
           <article className='rounded-2xl bg-app-sand p-5 text-app-sand-strong col-span-2'>
             <strong className='block font-display text-4xl leading-none'>
               {successRate}%
             </strong>
             <span className='text-base text-app-muted'>Framgång</span>
           </article>
+          */}
         </div>
         <MonthlyApplicationsChart applications={applications} />
       </div>

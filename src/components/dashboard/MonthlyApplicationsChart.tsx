@@ -116,6 +116,7 @@ export function MonthlyApplicationsChart({
     chart: {
       type: 'area' as const,
       height: 190,
+      parentHeightOffset: 0,
       toolbar: {
         show: false,
       },
@@ -141,8 +142,11 @@ export function MonthlyApplicationsChart({
     },
     xaxis: {
       categories: months.map((month) => monthNames[month.getMonth()]),
+      tickPlacement: 'on' as const,
       labels: {
+        offsetX: -3,
         style: {
+          cssClass: 'monthly-chart-xaxis-label',
           colors: '#64748b',
           fontSize: '12px',
         },
@@ -157,16 +161,33 @@ export function MonthlyApplicationsChart({
     yaxis: {
       min: 0,
       forceNiceScale: false,
+      floating: true,
       labels: {
+        align: 'left' as const,
+        maxWidth: 24,
+        minWidth: 0,
+        offsetX: 0,
         style: {
           colors: '#64748b',
           fontSize: '12px',
         },
         formatter: (value: number) => Math.round(value).toString(),
       },
+      axisBorder: {
+        show: false,
+      },
+      axisTicks: {
+        show: false,
+      },
     },
     grid: {
       show: false,
+      padding: {
+        top: 0,
+        right: 0,
+        bottom: -8,
+        left: 0,
+      },
     },
     legend: {
       position: 'top' as const,
@@ -195,16 +216,19 @@ export function MonthlyApplicationsChart({
   ]
 
   return (
-    <article className='rounded-2xl border border-app-stroke bg-app-card p-4'>
+    <article className='monthly-applications-chart w-full min-w-0 rounded-2xl border border-app-stroke bg-app-card p-4'>
       <h3 className='mb-3 text-xl font-display'>
         Ansökningar & Intervjuer per månad
       </h3>
-      <ReactApexChart
-        options={chartOptions}
-        series={series}
-        type='area'
-        height={190}
-      />
+      <div className='w-[calc(100%+1rem)] min-w-0'>
+        <ReactApexChart
+          options={chartOptions}
+          series={series}
+          type='area'
+          height={210}
+          width='100%'
+        />
+      </div>
     </article>
   )
 }
