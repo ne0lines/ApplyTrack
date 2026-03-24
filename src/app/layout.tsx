@@ -16,8 +16,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "ApplyTrack",
-  description: "Mobile-first jobbspårning byggd med Next.js",
+  title: "Jobi.sh - Lite mindre jobbigt. Mer jobi.sh",
+  description: "Lite mindre jobbigt. Mer jobi.sh",
 };
 
 export const viewport: Viewport = {

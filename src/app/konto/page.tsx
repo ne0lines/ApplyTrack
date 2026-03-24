@@ -22,7 +22,7 @@ export default async function AccountPage() {
   }
 
   return (
-    <main className="min-h-screen p-4 pt-0">
+    <main className="min-h-screen px-4">
       <section className="mx-auto flex w-full max-w-2xl flex-col gap-4">
         <div>
           <h1 className="font-display text-4xl sm:text-6xl">Konto</h1>
