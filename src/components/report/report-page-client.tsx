@@ -1,6 +1,13 @@
 "use client";
 
 import { Btn } from "@/components/ui/btn";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 
@@ -72,7 +79,7 @@ export function ReportPageClient({ jobs, options }: Readonly<ReportPageClientPro
 
   if (options.length === 0) {
     return (
-      <main className="min-h-screen p-4 pt-0">
+      <main className="min-h-screen px-4">
         <section className="mx-auto flex w-full max-w-3xl flex-col gap-4 p-5 sm:p-8">
           <h1 className="font-display text-4xl sm:text-5xl">Aktivitetsrapport</h1>
           <p className="text-lg text-app-muted">
@@ -87,7 +94,7 @@ export function ReportPageClient({ jobs, options }: Readonly<ReportPageClientPro
   }
 
   return (
-    <main className="min-h-screen p-4 pt-0">
+    <main className="min-h-screen px-4">
       <section className="mx-auto flex w-full max-w-3xl flex-col gap-4">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -98,17 +105,18 @@ export function ReportPageClient({ jobs, options }: Readonly<ReportPageClientPro
           </div>
 
           <label className="flex w-full flex-col gap-2 sm:max-w-xs">
-            <select
-              className="w-full rounded-2xl border border-app-stroke bg-white px-4 py-3 text-base text-app-ink outline-none transition focus:border-app-primary focus:ring-2 focus:ring-app-primary/20"
-              value={selectedMonth}
-              onChange={(event) => setSelectedMonth(event.target.value)}
-            >
-              {options.map((option) => (
-                <option key={option.key} value={option.key}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <Select value={selectedMonth} onValueChange={(value) => setSelectedMonth(value ?? "") }>
+              <SelectTrigger className="h-12 w-full rounded-2xl border-app-stroke bg-white px-4 text-base text-app-ink focus-visible:border-app-primary focus-visible:ring-app-primary/20">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {options.map((option) => (
+                  <SelectItem key={option.key} value={option.key}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </label>
         </div>
 

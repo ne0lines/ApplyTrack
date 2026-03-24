@@ -3,6 +3,16 @@
 import { createJob, getJobs } from "@/app/services/services";
 import { LogoutBtn } from "@/components/auth/logout-btn";
 import { Btn } from "@/components/ui/btn";
+import { DatePicker } from "@/components/ui/date-picker";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { type AutofillPayload, type CreateJobInput, type JobFormState, JobStatus } from "@/app/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -23,6 +33,17 @@ const initialState: JobFormState = {
   contactPhone: "",
   notes: "",
 };
+
+const employmentTypeOptions = ["Tillsvidare", "Visstid", "Provanställning", "Konsult"];
+const workloadOptions = ["Heltid", "Deltid"];
+const statusOptions: Array<{ value: JobStatus; label: string }> = [
+  { value: JobStatus.SAVED, label: "Sparad" },
+  { value: JobStatus.APPLIED, label: "Ansökt" },
+  { value: JobStatus.IN_PROCESS, label: "Pågående" },
+  { value: JobStatus.INTERVIEW, label: "Intervju" },
+  { value: JobStatus.OFFER, label: "Erbjudande" },
+  { value: JobStatus.CLOSED, label: "Avslutad" },
+];
 
 function extractAfJobId(value: string): string | null {
   const match = /(\d{6,})/.exec(value);
@@ -239,7 +260,7 @@ export default function NewJobPage() {
   };
 
   return (
-    <main className="min-h-dvh px-4 pb-4 pt-0">
+    <main className="min-h-dvh px-4">
       <section className="mx-auto flex min-h-dvh w-full flex-col gap-4">
         <div>
           <h1 className="font-display text-4xl sm:text-6xl">Lägg till jobb</h1>
@@ -256,7 +277,7 @@ export default function NewJobPage() {
             <div className="mt-4">
               <label className="mb-3 block font-semibold text-app-muted">
                 <span className="block">Annonslänk</span>
-                <input
+                <Input
                   className="mt-2 w-full rounded-2xl border border-app-stroke bg-white px-4 py-3.5 text-base text-app-ink outline-none transition focus:border-app-primary focus:ring-2 focus:ring-app-primary/20"
                   name="jobUrl"
                   placeholder="https://arbetsformedlingen.se/platsbanken/annonser/30763601"
@@ -268,7 +289,7 @@ export default function NewJobPage() {
 
               <label className="mb-3 block font-semibold text-app-muted">
                 <span className="block">Jobbtitel</span>
-                <input
+                <Input
                   className="mt-2 w-full rounded-2xl border border-app-stroke bg-white px-4 py-3.5 text-base text-app-ink outline-none transition focus:border-app-primary focus:ring-2 focus:ring-app-primary/20"
                   name="title"
                   placeholder="t.ex. UI Developer"
@@ -280,7 +301,7 @@ export default function NewJobPage() {
 
               <label className="mb-3 block font-semibold text-app-muted">
                 <span className="block">Företag</span>
-                <input
+                <Input
                   className="mt-2 w-full rounded-2xl border border-app-stroke bg-white px-4 py-3.5 text-base text-app-ink outline-none transition focus:border-app-primary focus:ring-2 focus:ring-app-primary/20"
                   name="company"
                   placeholder="t.ex. PixelForge"
@@ -292,7 +313,7 @@ export default function NewJobPage() {
 
               <label className="mb-3 block font-semibold text-app-muted">
                 <span className="block">Plats</span>
-                <input
+                <Input
                   className="mt-2 w-full rounded-2xl border border-app-stroke bg-white px-4 py-3.5 text-base text-app-ink outline-none transition focus:border-app-primary focus:ring-2 focus:ring-app-primary/20"
                   name="location"
                   placeholder="t.ex. Stockholm / Remote"
@@ -305,73 +326,76 @@ export default function NewJobPage() {
               <div className="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <label className="block font-semibold text-app-muted">
                   <span className="block">Anställningstyp</span>
-                  <select
-                    className="mt-2 w-full rounded-2xl border border-app-stroke bg-white px-4 py-3.5 text-base text-app-ink outline-none transition focus:border-app-primary focus:ring-2 focus:ring-app-primary/20"
-                    name="employmentType"
+                  <Select
                     value={form.employmentType}
-                    onChange={(event) => updateField("employmentType", event.target.value)}
+                    onValueChange={(value) => updateField("employmentType", value ?? "")}
                   >
-                    <option value="">Välj</option>
-                    <option value="Tillsvidare">Tillsvidare</option>
-                    <option value="Visstid">Visstid</option>
-                    <option value="Provanställning">Provanställning</option>
-                    <option value="Konsult">Konsult</option>
-                  </select>
+                    <SelectTrigger className="mt-2 h-14 w-full rounded-2xl border-app-stroke bg-white px-4 text-base text-app-ink focus-visible:border-app-primary focus-visible:ring-app-primary/20 data-placeholder:text-app-muted">
+                      <SelectValue placeholder="Välj" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {employmentTypeOptions.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {option}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </label>
 
                 <label className="block font-semibold text-app-muted">
                   <span className="block">Omfattning</span>
-                  <select
-                    className="mt-2 w-full rounded-2xl border border-app-stroke bg-white px-4 py-3.5 text-base text-app-ink outline-none transition focus:border-app-primary focus:ring-2 focus:ring-app-primary/20"
-                    name="workload"
+                  <Select
                     value={form.workload}
-                    onChange={(event) => updateField("workload", event.target.value)}
+                    onValueChange={(value) => updateField("workload", value ?? "")}
                   >
-                    <option value="">Välj</option>
-                    <option value="Heltid">Heltid</option>
-                    <option value="Deltid">Deltid</option>
-                  </select>
+                    <SelectTrigger className="mt-2 h-14 w-full rounded-2xl border-app-stroke bg-white px-4 text-base text-app-ink focus-visible:border-app-primary focus-visible:ring-app-primary/20 data-placeholder:text-app-muted">
+                      <SelectValue placeholder="Välj" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {workloadOptions.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {option}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </label>
               </div>
 
               <label className="mb-3 block font-semibold text-app-muted">
                 <span className="block">Status</span>
-                <select
-                  className="mt-2 w-full rounded-2xl border border-app-stroke bg-white px-4 py-3.5 text-base text-app-ink outline-none transition focus:border-app-primary focus:ring-2 focus:ring-app-primary/20"
-                  name="status"
-                  required
+                <Select
                   value={form.status}
-                  onChange={(event) => updateField("status", event.target.value as JobStatus)}
+                  onValueChange={(value) => updateField("status", value as JobStatus)}
                 >
-                  <option value={JobStatus.SAVED}>Sparad</option>
-                  <option value={JobStatus.APPLIED}>Ansökt</option>
-                  <option value={JobStatus.IN_PROCESS}>Pågående</option>
-                  <option value={JobStatus.INTERVIEW}>Intervju</option>
-                  <option value={JobStatus.OFFER}>Erbjudande</option>
-                  <option value={JobStatus.CLOSED}>Avslutad</option>
-                </select>
+                  <SelectTrigger className="mt-2 h-14 w-full rounded-2xl border-app-stroke bg-white px-4 text-base text-app-ink focus-visible:border-app-primary focus-visible:ring-app-primary/20">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {statusOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </label>
 
               <div className="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <label className="block font-semibold text-app-muted">
                   <span className="block">Datum för ansökan</span>
-                  <input
-                    className="mt-2 w-full rounded-2xl border border-app-stroke bg-white px-4 py-3.5 text-base text-app-ink outline-none transition focus:border-app-primary focus:ring-2 focus:ring-app-primary/20"
-                    name="applicationDate"
-                    type="date"
+                  <DatePicker
                     value={form.applicationDate}
-                    onChange={(event) => updateField("applicationDate", event.target.value)}
+                    onChange={(value) => updateField("applicationDate", value)}
                   />
                 </label>
 
                 <label className="block font-semibold text-app-muted">
                   <span className="block">Sista ansökningsdag</span>
-                  <input
-                    className="mt-2 w-full rounded-2xl border border-app-stroke bg-white px-4 py-3.5 text-base text-app-ink outline-none transition focus:border-app-primary focus:ring-2 focus:ring-app-primary/20"
-                    name="deadline"
-                    type="date"
+                  <DatePicker
                     value={form.deadline}
-                    onChange={(event) => updateField("deadline", event.target.value)}
+                    onChange={(value) => updateField("deadline", value)}
                   />
                 </label>
               </div>
@@ -382,7 +406,7 @@ export default function NewJobPage() {
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <label className="block text-sm font-semibold text-app-muted">
                     <span className="block">Namn</span>
-                    <input
+                    <Input
                       className="mt-1 w-full rounded-2xl border border-app-stroke bg-white px-4 py-3 text-base text-app-ink outline-none transition focus:border-app-primary focus:ring-2 focus:ring-app-primary/20"
                       name="contactName"
                       placeholder="t.ex. Anna Berg"
@@ -394,7 +418,7 @@ export default function NewJobPage() {
 
                   <label className="block text-sm font-semibold text-app-muted">
                     <span className="block">Roll</span>
-                    <input
+                    <Input
                       className="mt-1 w-full rounded-2xl border border-app-stroke bg-white px-4 py-3 text-base text-app-ink outline-none transition focus:border-app-primary focus:ring-2 focus:ring-app-primary/20"
                       name="contactRole"
                       placeholder="t.ex. Rekryterare"
@@ -406,7 +430,7 @@ export default function NewJobPage() {
 
                   <label className="block text-sm font-semibold text-app-muted">
                     <span className="block">E-post</span>
-                    <input
+                    <Input
                       className="mt-1 w-full rounded-2xl border border-app-stroke bg-white px-4 py-3 text-base text-app-ink outline-none transition focus:border-app-primary focus:ring-2 focus:ring-app-primary/20"
                       name="contactEmail"
                       placeholder="namn@företag.se"
@@ -418,7 +442,7 @@ export default function NewJobPage() {
 
                   <label className="block text-sm font-semibold text-app-muted">
                     <span className="block">Telefon</span>
-                    <input
+                    <Input
                       className="mt-1 w-full rounded-2xl border border-app-stroke bg-white px-4 py-3 text-base text-app-ink outline-none transition focus:border-app-primary focus:ring-2 focus:ring-app-primary/20"
                       name="contactPhone"
                       placeholder="070-123 45 67"
@@ -432,7 +456,7 @@ export default function NewJobPage() {
 
               <label className="mb-3 block font-semibold text-app-muted">
                 <span className="block">Noteringar (valfritt)</span>
-                <textarea
+                <Textarea
                   className="mt-2 w-full resize-y rounded-2xl border border-app-stroke bg-white px-4 py-3.5 text-base text-app-ink outline-none transition focus:border-app-primary focus:ring-2 focus:ring-app-primary/20"
                   name="notes"
                   rows={4}
@@ -442,11 +466,11 @@ export default function NewJobPage() {
                 />
               </label>
 
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <Btn href="/" variant="secondary">
+              <div className="flex gap-4">
+                <Btn href="/" variant="secondary" className="w-1/2">
                   Avbryt
                 </Btn>
-                <Btn disabled={isSubmitting} type="submit">
+                <Btn disabled={isSubmitting} type="submit" className="w-full" icon="/MaterialSymbolsAdd.svg" iconHex="#FFFFFF">
                   {isSubmitting ? "Sparar..." : "Lägg till jobb"}
                 </Btn>
               </div>
@@ -457,7 +481,7 @@ export default function NewJobPage() {
                 <div className="w-full max-w-xl">
                   <label className="block font-semibold text-app-muted">
                     <span className="block">Annonslänk</span>
-                    <input
+                    <Input
                       className="mt-2 w-full rounded-2xl border border-app-stroke bg-white px-4 py-3.5 text-base text-app-ink outline-none transition focus:border-app-primary focus:ring-2 focus:ring-app-primary/20"
                       name="jobUrl"
                       placeholder="https://arbetsformedlingen.se/platsbanken/annonser/xxxxx"
@@ -483,11 +507,11 @@ export default function NewJobPage() {
               </div>
 
               {hasExistingJobs ? null : (
-                <div className="mt-3 grid w-full grid-cols-2 gap-3">
-                  <Btn href="/konto" variant="secondary" className="w-full">
+                <div className="flex mt-4 w-full gap-4">
+                  <Btn href="/konto" variant="secondary" className="w-1/2">
                     Konto
                   </Btn>
-                  <LogoutBtn className="w-full" />
+                  <LogoutBtn className="w-1/2" />
                 </div>
               )}
             </>
