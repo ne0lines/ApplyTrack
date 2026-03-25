@@ -1,6 +1,7 @@
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { LogoutBtn } from "@/components/auth/logout-btn";
 import { AUTH_COOKIE_NAME, getUserIdFromHeaders, verifySessionValue } from "@/server/auth-session";
 import { getUserById } from "@/server/users";
 
@@ -39,6 +40,8 @@ export default async function AccountPage() {
             </div>
           </dl>
         </article>
+
+        <LogoutBtn className="w-full md:hidden" />
       </section>
     </main>
   );

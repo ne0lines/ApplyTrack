@@ -8,6 +8,7 @@ import { ExternalLink, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function JobDetailPage({
   params,
@@ -57,12 +58,11 @@ export default function JobDetailPage({
 
     try {
       await deleteJob(jobId);
+      toast.success("Jobbet togs bort.");
       router.push("/");
       router.refresh();
     } catch (deleteError) {
-      globalThis.alert(
-        deleteError instanceof Error ? deleteError.message : "Kunde inte ta bort annonsen.",
-      );
+      toast.error(deleteError instanceof Error ? deleteError.message : "Kunde inte ta bort annonsen.");
       setIsDeleting(false);
     }
   }
