@@ -1,5 +1,6 @@
 import { Btn } from "@/components/ui/btn";
 import { LogoutBtn } from "@/components/auth/logout-btn";
+import { Pipeline, Statistics } from "@/components/dashboard";
 
 export default async function Home() {
   return (
@@ -11,6 +12,8 @@ export default async function Home() {
             <Btn className="md:hidden" href="/jobb/new" icon={Plus}>Lägg till jobb</Btn>
           </div>
         </section>
+        <Statistics applications={[]} />
+        <Pipeline jobs={[]} />
         <Btn
           href="/report"
           className="mt-5 w-full"
