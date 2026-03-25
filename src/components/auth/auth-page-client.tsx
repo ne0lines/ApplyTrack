@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { Btn } from "@/components/ui/btn";
 
@@ -67,6 +68,7 @@ export function AuthPageClient({ initialNextPath = "/" }: Readonly<{ initialNext
       const validationError = validateRegisterInput(email, password);
 
       if (validationError) {
+        toast.error(validationError);
         setFeedback(validationError);
         setIsSubmitting(false);
         return;
@@ -90,6 +92,7 @@ export function AuthPageClient({ initialNextPath = "/" }: Readonly<{ initialNext
       router.push(initialNextPath);
       router.refresh();
     } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Något gick fel.");
       setFeedback(error instanceof Error ? error.message : "Något gick fel.");
     } finally {
       setIsSubmitting(false);

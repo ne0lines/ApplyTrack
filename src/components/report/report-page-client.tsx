@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { Copy } from "lucide-react";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 
 type ReportPageClientProps = {
   jobs: ReportJobEntry[];
@@ -43,8 +44,9 @@ function CopyTrigger({
 async function copyTextToClipboard(value: string) {
   try {
     await navigator.clipboard.writeText(value);
+    toast.success("Kopierat till urklipp.");
   } catch {
-    globalThis.alert("Kunde inte kopiera till urklipp.");
+    toast.error("Kunde inte kopiera till urklipp.");
   }
 }
 

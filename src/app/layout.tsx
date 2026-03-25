@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Inter, Geist } from "next/font/google";
 import "./globals.css";
 import { AppNavigationShell } from "@/components/navigation/bottom-nav";
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
@@ -38,6 +39,7 @@ export default function RootLayout({
     <html lang="sv" className={cn("font-sans", geist.variable)}>
       <body className={`${bricolageGrotesque.variable} ${inter.variable} min-h-svh antialiased`}>
         <AppNavigationShell>{children}</AppNavigationShell>
+        <Toaster />
       </body>
     </html>
   );

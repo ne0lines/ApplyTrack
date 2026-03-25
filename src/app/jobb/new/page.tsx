@@ -17,6 +17,7 @@ import { Plus, TextCursorInput } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { toast } from "sonner";
 
 const initialState: JobFormState = {
   title: "",
@@ -150,7 +151,7 @@ export default function NewJobPage() {
           lastFetchedJobId.current = jobId;
           setShowManualFields(false);
           setFeedback("");
-          globalThis.alert("Den här annonsen finns redan sparad.");
+          toast.warning("Den här annonsen finns redan sparad.");
           return;
         }
 
@@ -178,6 +179,7 @@ export default function NewJobPage() {
         setShowManualFields(true);
         setFeedback("");
       } catch {
+        toast.error("Kunde inte hämta data automatiskt just nu.");
         setFeedback("Kunde inte hämta data automatiskt just nu.");
       } finally {
         setIsAutofilling(false);
@@ -242,9 +244,11 @@ export default function NewJobPage() {
 
       const createdJob = await createJob(payload);
 
+      toast.success("Jobbet lades till.");
       router.push(`/jobb/${createdJob.id}`);
       router.refresh();
     } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Kunde inte spara jobbet just nu.");
       setFeedback(
         error instanceof Error ? error.message : "Kunde inte spara jobbet just nu.",
       );

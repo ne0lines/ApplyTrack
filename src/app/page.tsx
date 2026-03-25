@@ -1,5 +1,4 @@
 import { Btn } from "@/components/ui/btn";
-import { LogoutBtn } from "@/components/auth/logout-btn";
 import { Pipeline, Statistics } from "@/components/dashboard";
 import { Plus } from "lucide-react";
 import { cookies, headers } from "next/headers";
@@ -40,7 +39,6 @@ export default async function Home() {
         </section>
         <Pipeline jobs={applications} />
         <Statistics applications={applications} />
-        <LogoutBtn className="mt-3 w-full md:hidden" />
       </div>
     </main>
   );
