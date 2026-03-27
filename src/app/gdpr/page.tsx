@@ -1,18 +1,22 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Btn } from '@/components/ui/btn';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useRouter } from 'next/navigation';
 
 export default function GDPRPage() {
+  const router = useRouter();
+
   return (
-    <div className="max-w-3xl mx-auto py-10 px-4 space-y-6 mb-20 md:mb-0">
-      <h1 className="text-3xl font-bold">GDPR-information</h1>
+    <div className='max-w-3xl mx-auto py-10 px-4 space-y-6 mb-20 md:mb-0'>
+      <h1 className='text-3xl font-bold'>GDPR-information</h1>
 
       {/* 1 */}
       <Card>
         <CardHeader>
           <CardTitle>1. Personuppgifter vi samlar in</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2">
+        <CardContent className='space-y-2'>
           <p>
             <strong>Person A (användare):</strong> namn och e-post
           </p>
@@ -28,12 +32,12 @@ export default function GDPRPage() {
         <CardHeader>
           <CardTitle>2. Syfte med databehandling</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2">
+        <CardContent className='space-y-2'>
           <p>
             <strong>Person A:</strong> för inloggning och appens funktionalitet
           </p>
           <p>
-            <strong>Person B:</strong> används{" "}
+            <strong>Person B:</strong> används{' '}
             <strong>endast för visning i appen </strong>
             för den användare som lagt till kontakten
           </p>
@@ -46,7 +50,7 @@ export default function GDPRPage() {
         <CardHeader>
           <CardTitle>3. Google Analytics 4</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2">
+        <CardContent className='space-y-2'>
           <p>
             Vi samlar in anonymiserad statistik om hur appen används (t.ex.
             sidvisningar och klick)
@@ -61,7 +65,7 @@ export default function GDPRPage() {
         <CardHeader>
           <CardTitle>4. Laglig grund</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2">
+        <CardContent className='space-y-2'>
           <p>
             <strong>Person A:</strong> samtycke vid registrering
           </p>
@@ -77,9 +81,9 @@ export default function GDPRPage() {
         <CardHeader>
           <CardTitle>5. Dina rättigheter</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2">
+        <CardContent className='space-y-2'>
           <p>Du har rätt att:</p>
-          <ul className="list-disc pl-5 space-y-1">
+          <ul className='list-disc pl-5 space-y-1'>
             <li>Få tillgång till dina uppgifter</li>
             <li>Få felaktiga uppgifter rättade</li>
             <li>Få dina uppgifter raderade</li>
