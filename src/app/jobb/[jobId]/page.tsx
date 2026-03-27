@@ -1,15 +1,16 @@
 "use client";
 
-import { deleteJob, getJob } from "@/app/services/services";
 import type { Job } from "@/app/types";
 import { Btn } from "@/components/ui/btn";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Loader } from "@/components/ui/loader";
 import { StatusSelect } from "@/components/ui/status-select";
 import { ExternalLink, PencilLine, Trash2 } from "lucide-react";
+import { useDeleteJob, useJob } from "@/lib/hooks/jobs";
+import { ExternalLink, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { use, useState } from "react";
 import { toast } from "sonner";
 
 export default function JobDetailPage({
@@ -19,53 +20,25 @@ export default function JobDetailPage({
 }>) {
   const { jobId } = use(params);
   const router = useRouter();
-  const [job, setJob] = useState<Job | null>(null);
-  const [error, setError] = useState("");
-  const [isDeleting, setIsDeleting] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  useEffect(() => {
-    let isMounted = true;
+  const { data: job, isLoading, isError } = useJob(jobId);
+  const deleteJobMutation = useDeleteJob();
 
-    async function loadJob() {
-      try {
-        const nextJob = await getJob(jobId);
-
-        if (isMounted) {
-          setJob(nextJob);
-          setError("");
-        }
-      } catch {
-        if (isMounted) {
-          setJob(null);
-          setError("Jobbet kunde inte hittas.");
-        }
-      }
-    }
-
-    void loadJob();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [jobId]);
-
-  async function handleDelete() {
-    setIsDeleting(true);
-
-    try {
-      await deleteJob(jobId);
-      toast.success("Jobbet togs bort.");
-      setConfirmOpen(false);
-      router.push("/");
-      router.refresh();
-    } catch (deleteError) {
-      toast.error(deleteError instanceof Error ? deleteError.message : "Kunde inte ta bort annonsen.");
-      setIsDeleting(false);
-    }
+  function handleDelete() {
+    deleteJobMutation.mutate(jobId, {
+      onSuccess: () => {
+        toast.success("Jobbet togs bort.");
+        setConfirmOpen(false);
+        router.push("/");
+      },
+      onError: (error) => {
+        toast.error(error instanceof Error ? error.message : "Kunde inte ta bort annonsen.");
+      },
+    });
   }
 
-  if (!job && !error) {
+  if (isLoading) {
     return (
       <main className="flex min-h-svh flex-col items-center justify-center gap-3">
         <Loader size={40} />
@@ -74,12 +47,12 @@ export default function JobDetailPage({
     );
   }
 
-  if (!job) {
+  if (isError || !job) {
     return (
       <main className="min-h-svh pt-4">
         <section className="flex w-full max-w-3xl flex-col gap-4 p-5 sm:p-8 md:max-w-none">
           <h1 className="font-display text-4xl md:text-[2.4rem]">Jobbdetaljer</h1>
-          <p className="text-base text-app-muted sm:text-lg">{error}</p>
+          <p className="text-base text-app-muted sm:text-lg">Jobbet kunde inte hittas.</p>
           <Btn href="/" variant="secondary">
             Tillbaka
           </Btn>
@@ -160,7 +133,7 @@ export default function JobDetailPage({
           description="Det här går inte att ångra. Jobbet och all tillhörande information tas bort permanent."
           confirmLabel="Ta bort"
           onConfirm={() => void handleDelete()}
-          isLoading={isDeleting}
+          isLoading={deleteJobMutation.isPending}
         />
       </section>
     </main>
