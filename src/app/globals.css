@@ -5,6 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+	--mobile-bottom-nav-clearance: calc(env(safe-area-inset-bottom) + 8.5rem);
+	--mobile-toast-offset: calc(var(--mobile-bottom-nav-clearance) + 0.75rem);
 	--app-bg: #f3f4f8;
 	--app-ink: #111728;
 	--app-muted: #697083;
@@ -158,7 +160,7 @@
 	}
 
 	main {
-		padding-bottom: 6.8rem;
+		padding-bottom: var(--mobile-bottom-nav-clearance);
 	}
 
 	@media (min-width: 768px) {
@@ -208,6 +210,220 @@
 
 	.monthly-applications-chart .apexcharts-xaxis-texts-g text:last-child {
 		transform: translateX(-8px);
+	}
+
+	.jobish-loader {
+		--loader-size: 48px;
+		--loader-shadow: var(--app-ink);
+		--loader-cycle: 2.6s;
+		display: inline-block;
+		width: var(--loader-size);
+		height: var(--loader-size);
+		position: relative;
+		flex-shrink: 0;
+	}
+
+	.jobish-loader::before {
+		content: "";
+		width: 100%;
+		height: calc(var(--loader-size) * 0.1041666667);
+		background: var(--loader-shadow);
+		opacity: 0.25;
+		position: absolute;
+		top: calc(var(--loader-size) * 1.25);
+		left: 0;
+		border-radius: 50%;
+		animation: jobish-loader-shadow var(--loader-cycle) ease-in-out infinite;
+	}
+
+	.jobish-loader__icon {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+		backface-visibility: hidden;
+		will-change: transform;
+		user-select: none;
+		pointer-events: none;
+	}
+
+	.jobish-loader__rotor {
+		width: 100%;
+		height: 100%;
+		display: block;
+		overflow: hidden;
+		border-radius: calc(var(--loader-size) * 0.0833333333);
+		transform-origin: center;
+		animation: jobish-loader-rotor var(--loader-cycle) linear infinite;
+		will-change: transform, border-radius;
+	}
+
+	.jobish-loader__sprite {
+		width: 100%;
+		height: 100%;
+		animation: jobish-loader-bounce var(--loader-cycle) ease-in-out infinite;
+		position: absolute;
+		top: 0;
+		left: 0;
+		display: block;
+		border-radius: calc(var(--loader-size) * 0.0833333333);
+		transform-origin: center bottom;
+		will-change: transform;
+		>span>img{
+			box-shadow: 0 10px 24px #6e33eb2e;
+		}
+	}
+
+	@keyframes jobish-loader-rotor {
+		0% {
+			transform: rotate(0deg);
+			border-radius: calc(var(--loader-size) * 0.0833333333);
+		}
+
+		7.5% {
+			transform: rotate(27deg);
+			border-radius: calc(var(--loader-size) * 0.0833333333);
+		}
+
+		12.5% {
+			transform: rotate(45deg);
+			border-top-left-radius: calc(var(--loader-size) * 0.0833333333);
+			border-top-right-radius: calc(var(--loader-size) * 0.0833333333);
+			border-bottom-left-radius: calc(var(--loader-size) * 0.0833333333);
+			border-bottom-right-radius: calc(var(--loader-size) * 0.8333333333);
+		}
+
+		17.5% {
+			transform: rotate(63deg);
+			border-radius: calc(var(--loader-size) * 0.0833333333);
+		}
+
+		25% {
+			transform: rotate(90deg);
+			border-radius: calc(var(--loader-size) * 0.0833333333);
+		}
+
+		32.5% {
+			transform: rotate(117deg);
+			border-radius: calc(var(--loader-size) * 0.0833333333);
+		}
+
+		37.5% {
+			transform: rotate(135deg);
+			border-top-left-radius: calc(var(--loader-size) * 0.0833333333);
+			border-top-right-radius: calc(var(--loader-size) * 0.8333333333);
+			border-bottom-left-radius: calc(var(--loader-size) * 0.0833333333);
+			border-bottom-right-radius: calc(var(--loader-size) * 0.0833333333);
+		}
+
+		42.5% {
+			transform: rotate(153deg);
+			border-radius: calc(var(--loader-size) * 0.0833333333);
+		}
+
+		50% {
+			transform: rotate(180deg);
+			border-radius: calc(var(--loader-size) * 0.0833333333);
+		}
+
+		57.5% {
+			transform: rotate(207deg);
+			border-radius: calc(var(--loader-size) * 0.0833333333);
+		}
+
+		62.5% {
+			transform: rotate(225deg);
+			border-top-left-radius: calc(var(--loader-size) * 0.8333333333);
+			border-top-right-radius: calc(var(--loader-size) * 0.0833333333);
+			border-bottom-left-radius: calc(var(--loader-size) * 0.0833333333);
+			border-bottom-right-radius: calc(var(--loader-size) * 0.0833333333);
+		}
+
+		67.5% {
+			transform: rotate(243deg);
+			border-radius: calc(var(--loader-size) * 0.0833333333);
+		}
+
+		75% {
+			transform: rotate(270deg);
+			border-radius: calc(var(--loader-size) * 0.0833333333);
+		}
+
+		82.5% {
+			transform: rotate(297deg);
+			border-radius: calc(var(--loader-size) * 0.0833333333);
+		}
+
+		87.5% {
+			transform: rotate(315deg);
+			border-top-left-radius: calc(var(--loader-size) * 0.0833333333);
+			border-top-right-radius: calc(var(--loader-size) * 0.0833333333);
+			border-bottom-left-radius: calc(var(--loader-size) * 0.8333333333);
+			border-bottom-right-radius: calc(var(--loader-size) * 0.0833333333);
+		}
+
+		92.5% {
+			transform: rotate(333deg);
+			border-radius: calc(var(--loader-size) * 0.0833333333);
+		}
+
+		100% {
+			transform: rotate(360deg);
+			border-radius: calc(var(--loader-size) * 0.0833333333);
+		}
+	}
+
+	@keyframes jobish-loader-bounce {
+		0%,
+		100% {
+			transform: translateY(0) scaleY(1);
+		}
+
+		7.5%,
+		32.5%,
+		57.5%,
+		82.5% {
+			transform: translateY(calc(var(--loader-size) * 0.14));
+		}
+
+		12.5%,
+		37.5%,
+		62.5%,
+		87.5% {
+			transform: translateY(calc(var(--loader-size) * 0.34)) scaleY(0.9);
+		}
+
+		17.5%,
+		42.5%,
+		67.5%,
+		92.5% {
+			transform: translateY(calc(var(--loader-size) * 0.12));
+		}
+	}
+
+	@keyframes jobish-loader-shadow {
+		0%,
+		11%,
+		14%,
+		25%,
+		36%,
+		39%,
+		50%,
+		61%,
+		64%,
+		75%,
+		86%,
+		89%,
+		100% {
+			transform: scale(1, 1);
+		}
+
+		12.5%,
+		37.5%,
+		62.5%,
+		87.5% {
+			transform: scale(1.2, 1);
+		}
 	}
   * {
     @apply border-border outline-ring/50;

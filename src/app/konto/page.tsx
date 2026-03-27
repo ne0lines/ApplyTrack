@@ -1,44 +1,69 @@
-import { cookies, headers } from "next/headers";
+import { LogoutBtn } from "@/components/auth/logout-btn";
+import { auth } from "@clerk/nextjs/server";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { AUTH_COOKIE_NAME, getUserIdFromHeaders, verifySessionValue } from "@/server/auth-session";
-import { getUserById } from "@/server/users";
+type UserProfile = {
+  id: string;
+  email: string;
+  name: string;
+  profession: string;
+};
+
+async function getUserProfile(cookieHeader: string): Promise<UserProfile | null> {
+  const headersList = await headers();
+  const host = headersList.get("host") ?? "localhost:3000";
+  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+
+  const res = await fetch(`${protocol}://${host}/api/user`, {
+    headers: { cookie: cookieHeader },
+    cache: "no-store",
+  });
+
+  if (!res.ok) return null;
+  return res.json() as Promise<UserProfile>;
+}
 
 export default async function AccountPage() {
-  const headerList = await headers();
-  const cookieStore = await cookies();
-  const userId = getUserIdFromHeaders(headerList) ?? (await verifySessionValue(cookieStore.get(AUTH_COOKIE_NAME)?.value));
+  const { userId } = await auth();
 
   if (!userId) {
-    redirect("/auth");
+    redirect("/sign-in");
   }
 
-  const currentUser = await getUserById(userId);
-
-  if (!currentUser) {
-    redirect("/auth");
-  }
+  const headersList = await headers();
+  const profile = await getUserProfile(headersList.get("cookie") ?? "");
 
   return (
-    <main className="min-h-svh px-4 pt-4">
+    <main className="min-h-svh pt-4">
       <section className="mx-auto flex w-full max-w-2xl flex-col gap-4 md:max-w-none">
         <div>
-          <h1 className="font-display text-4xl md:text-[2.4rem]">Konto</h1>
+          <h1 className="font-display text-4xl sm:text-6xl">Konto</h1>
+          {profile?.name && (
+            <p className="mt-3 text-base text-app-muted sm:text-lg">
+              {profile.name}
+            </p>
+          )}
         </div>
 
         <article className="rounded-3xl border border-app-stroke bg-app-card p-5">
-          <h2 className="font-display text-2xl">Kontoinformation</h2>
-          <dl className="mt-4 space-y-3 text-base text-app-ink">
+          <dl className="space-y-3 text-base text-app-ink">
             <div>
-              <dt className="text-sm font-semibold uppercase tracking-[0.08em] text-app-muted">E-postadress</dt>
-              <dd className="mt-1">{currentUser.email}</dd>
+              <dt className="text-sm font-semibold uppercase tracking-[0.08em] text-app-muted">Namn</dt>
+              <dd className="mt-1">{profile?.name ?? "—"}</dd>
             </div>
             <div>
-              <dt className="text-sm font-semibold uppercase tracking-[0.08em] text-app-muted">Användar-ID</dt>
-              <dd className="mt-1 break-all">{currentUser.id}</dd>
+              <dt className="text-sm font-semibold uppercase tracking-[0.08em] text-app-muted">E-postadress</dt>
+              <dd className="mt-1">{profile?.email ?? "—"}</dd>
+            </div>
+            <div>
+              <dt className="text-sm font-semibold uppercase tracking-[0.08em] text-app-muted">Yrke</dt>
+              <dd className="mt-1">{profile?.profession ?? "—"}</dd>
             </div>
           </dl>
         </article>
+
+        <LogoutBtn className="w-full md:hidden" />
       </section>
     </main>
   );

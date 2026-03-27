@@ -1,72 +1,107 @@
+import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
-
+import prisma from "@/lib/prisma";
 import type { CreateJobInput, Job } from "@/app/types";
-import { getApplicationsForUser, getNextJobId, readDbForUser, writeDb } from "@/server/db";
-import { getUserIdFromRequest } from "@/server/auth-session";
+import { JobStatus } from "@/app/types";
 
 type JobsResponse = {
   applications: Job[];
 };
 
-function extractExternalJobId(value: string): string | null {
-  const match = /(\d{6,})/.exec(value);
-  return match?.[1] ?? null;
-}
+const prismaStatusToAppStatus: Record<string, JobStatus> = {
+  saved: JobStatus.SAVED,
+  applied: JobStatus.APPLIED,
+  in_process: JobStatus.IN_PROCESS,
+  interview: JobStatus.INTERVIEW,
+  offer: JobStatus.OFFER,
+  closed: JobStatus.CLOSED,
+};
 
-export async function GET(req: NextRequest): Promise<NextResponse<JobsResponse | { error: string }>> {
-  const userId = await getUserIdFromRequest(req);
+const appStatusToPrisma: Record<string, string> = {
+  [JobStatus.SAVED]: "saved",
+  [JobStatus.APPLIED]: "applied",
+  [JobStatus.IN_PROCESS]: "in_process",
+  [JobStatus.INTERVIEW]: "interview",
+  [JobStatus.OFFER]: "offer",
+  [JobStatus.CLOSED]: "closed",
+};
+
+export async function GET(): Promise<NextResponse<JobsResponse | { error: string }>> {
+  const { userId } = await auth();
 
   if (!userId) {
-    return NextResponse.json({ error: "Kunde inte identifiera användaren." }, { status: 400 });
+    return NextResponse.json({ error: "Kunde inte identifiera användaren." }, { status: 401 });
   }
 
-  const res = await readDbForUser(userId);
+  const jobs = await prisma.job.findMany({
+    where: { userId },
+    include: { contactPerson: true, timeline: true },
+  });
 
-  return NextResponse.json({ applications: getApplicationsForUser(res.applications, userId) });
+  const applications: Job[] = jobs.map((job) => ({
+    id: job.id,
+    userId: job.userId,
+    title: job.title,
+    company: job.company,
+    location: job.location,
+    employmentType: job.employmentType,
+    workload: job.workload,
+    jobUrl: job.jobUrl,
+    notes: job.notes,
+    status: prismaStatusToAppStatus[job.status] ?? JobStatus.SAVED,
+    contactPerson: job.contactPerson ?? { name: "", role: "", email: "", phone: "" },
+    timeline: job.timeline.map((t) => ({ date: t.date, event: t.event })),
+  }));
+
+  return NextResponse.json({ applications });
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse<Job | { error: string }>> {
-  try {
-    const userId = await getUserIdFromRequest(req);
+  const { userId } = await auth();
 
-    if (!userId) {
-      return NextResponse.json({ error: "Kunde inte identifiera användaren." }, { status: 400 });
-    }
-
-    const payload = (await req.json()) as CreateJobInput;
-
-    if (!payload.title || !payload.company) {
-      return NextResponse.json(
-        { error: "Jobbtitel och företag måste anges." },
-        { status: 400 },
-      );
-    }
-
-    const db = await readDbForUser(userId);
-    const userApplications = getApplicationsForUser(db.applications, userId);
-    const externalJobId = extractExternalJobId(payload.jobUrl);
-    const nextId = externalJobId ?? getNextJobId(userApplications);
-
-    if (userApplications.some((application) => application.id === nextId)) {
-      return NextResponse.json(
-        { error: "Den här annonsen finns redan sparad." },
-        { status: 409 },
-      );
-    }
-
-    const newJob: Job = {
-      ...payload,
-      id: nextId,
-      userId,
-    };
-
-    await writeDb({
-      ...db,
-      applications: [...db.applications, newJob],
-    });
-
-    return NextResponse.json(newJob, { status: 201 });
-  } catch {
-    return NextResponse.json({ error: "Kunde inte spara jobbet." }, { status: 500 });
+  if (!userId) {
+    return NextResponse.json({ error: "Kunde inte identifiera användaren." }, { status: 401 });
   }
+
+  const payload = (await req.json()) as CreateJobInput;
+
+  if (!payload.title || !payload.company) {
+    return NextResponse.json({ error: "Jobbtitel och företag måste anges." }, { status: 400 });
+  }
+
+  const job = await prisma.job.create({
+    data: {
+      userId,
+      title: payload.title,
+      company: payload.company,
+      location: payload.location ?? "",
+      employmentType: payload.employmentType ?? "",
+      workload: payload.workload ?? "",
+      jobUrl: payload.jobUrl ?? "",
+      notes: payload.notes ?? "",
+      status: appStatusToPrisma[payload.status] as never ?? "saved",
+      contactPerson: payload.contactPerson
+        ? { create: payload.contactPerson }
+        : undefined,
+      timeline: payload.timeline?.length
+        ? { create: payload.timeline }
+        : undefined,
+    },
+    include: { contactPerson: true, timeline: true },
+  });
+
+  return NextResponse.json({
+    id: job.id,
+    userId: job.userId,
+    title: job.title,
+    company: job.company,
+    location: job.location,
+    employmentType: job.employmentType,
+    workload: job.workload,
+    jobUrl: job.jobUrl,
+    notes: job.notes,
+    status: prismaStatusToAppStatus[job.status] ?? JobStatus.SAVED,
+    contactPerson: job.contactPerson ?? { name: "", role: "", email: "", phone: "" },
+    timeline: job.timeline.map((t) => ({ date: t.date, event: t.event })),
+  } satisfies Job, { status: 201 });
 }

@@ -1,30 +1,37 @@
 import { getReportPageData } from "@/app/report/report-page-data";
+import type { Job } from "@/app/types";
 import { ReportPageClient } from "@/components/report/report-page-client";
-import { cookies, headers } from "next/headers";
+import { auth } from "@clerk/nextjs/server";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-
-import { getApplicationsForUser, readDbForUser } from "../../server/db";
-import { AUTH_COOKIE_NAME, getUserIdFromHeaders, verifySessionValue } from "../../server/auth-session";
-import { getUserById } from "../../server/users";
 
 export const dynamic = "force-dynamic";
 
+async function getJobs(cookieHeader: string): Promise<Job[]> {
+  const headersList = await headers();
+  const host = headersList.get("host") ?? "localhost:3000";
+  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+
+  const res = await fetch(`${protocol}://${host}/api/jobs`, {
+    headers: { cookie: cookieHeader },
+    cache: "no-store",
+  });
+
+  if (!res.ok) return [];
+
+  const data = (await res.json()) as { applications: Job[] };
+  return data.applications;
+}
+
 export default async function ActivityReportPage() {
-  const headerList = await headers();
-  const cookieStore = await cookies();
-  const userId = getUserIdFromHeaders(headerList) ?? (await verifySessionValue(cookieStore.get(AUTH_COOKIE_NAME)?.value));
+  const { userId } = await auth();
 
   if (!userId) {
-    redirect("/auth");
+    redirect("/sign-in");
   }
 
-  const db = userId ? await readDbForUser(userId) : { applications: [] };
-  const applications = userId ? getApplicationsForUser(db.applications, userId) : [];
-  const currentUser = userId ? await getUserById(userId) : null;
-
-  if (!currentUser) {
-    redirect("/auth");
-  }
+  const headersList = await headers();
+  const applications = await getJobs(headersList.get("cookie") ?? "");
 
   if (applications.length === 0) {
     redirect("/jobb/new");
