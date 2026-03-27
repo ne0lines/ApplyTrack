@@ -305,7 +305,7 @@ export function ReportPageClient({ jobs, options }: Readonly<ReportPageClientPro
 
       <Drawer
         open={isInstallDrawerOpen && isExtensionInstalled === false}
-        onOpenChange={(open) => {
+        onOpenChange={(open: boolean) => {
           if (!open) {
             dismissInstallDrawer();
             return;
@@ -315,6 +315,7 @@ export function ReportPageClient({ jobs, options }: Readonly<ReportPageClientPro
         }}
       >
         <DrawerContent>
+          <DrawerTitle className="sr-only">Installera Jobi.sh Extensionen</DrawerTitle>
           <div className="mx-auto flex w-full max-w-[75vw] flex-col gap-6">
             <div className="flex items-start justify-between gap-4">
               <DrawerHeader className="min-w-0 gap-0">
