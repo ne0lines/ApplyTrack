@@ -6,7 +6,7 @@ import { Btn } from "@/components/ui/btn";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Loader } from "@/components/ui/loader";
 import { StatusSelect } from "@/components/ui/status-select";
-import { ExternalLink, Trash2 } from "lucide-react";
+import { ExternalLink, PencilLine, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
@@ -123,7 +123,10 @@ export default function JobDetailPage({
               </>
             )}
           </article>
-          <Btn href={job.jobUrl} icon={ExternalLink} rel="noreferrer" target="_blank">Besök annons</Btn>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Btn href={job.jobUrl} className="w-full" icon={ExternalLink} rel="noreferrer" target="_blank">Besök annons</Btn>
+            <Btn href={`/jobb/${job.id}/edit`} className="w-full" icon={PencilLine} variant="secondary">Redigera</Btn>
+          </div>
           <article className="rounded-2xl border border-app-stroke bg-app-card p-4">
             <h3 className="mb-2 text-xl font-display">Historik</h3>
             <div className="relative mt-2">
