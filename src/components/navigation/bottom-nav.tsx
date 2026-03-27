@@ -70,7 +70,8 @@ export function AppNavigationShell({
   const hideNavigation =
     pathname.startsWith("/auth") ||
     pathname.startsWith("/konto/create-profile") ||
-    pathname.startsWith("/terms");
+    pathname.startsWith("/terms") ||
+    pathname.startsWith("/gdpr");
   const showNavigation = !hideNavigation;
 
   return (
