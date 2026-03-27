@@ -2,12 +2,11 @@
 
 import { LogoutBtn } from "@/components/auth/logout-btn";
 import { Btn } from "@/components/ui/btn";
+import { cn } from "@/lib/utils";
 import { BriefcaseBusiness, House, Plus, Puzzle, UserRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-import { cn } from "@/lib/utils";
 
 const navItems = [
   {
@@ -68,7 +67,10 @@ export function AppNavigationShell({
   children,
 }: Readonly<AppNavigationShellProps>) {
   const pathname = usePathname();
-  const hideNavigation = pathname.startsWith("/auth");
+  const hideNavigation =
+    pathname.startsWith("/auth") ||
+    pathname.startsWith("/konto/create-profile") ||
+    pathname.startsWith("/terms");
   const showNavigation = !hideNavigation;
 
   return (
@@ -78,7 +80,10 @@ export function AppNavigationShell({
           <div className="md:flex md:items-start md:gap-8">
             <aside className="hidden md:block md:w-72 md:shrink-0 md:py-4">
               <div className="fixed top-4 flex h-[calc(100svh-2rem)] w-72 flex-col rounded-2xl border border-white/85 bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(242,245,251,0.68))] p-4 shadow-[0_10px_24px_rgba(17,23,40,0.10),0_28px_70px_rgba(17,23,40,0.18)] ring-1 ring-black/6 backdrop-blur-xl supports-backdrop-filter:bg-[linear-gradient(180deg,rgba(255,255,255,0.58),rgba(242,245,251,0.42))]">
-                <Link href="/" className="block w-full rounded-2xl px-3 py-2 transition hover:bg-white/30">
+                <Link
+                  href="/"
+                  className="block w-full rounded-2xl px-3 py-2 transition hover:bg-white/30"
+                >
                   <h1 className="w-full text-[3.5rem] leading-none tracking-[-0.04em]">
                     Jobi<span className="text-app-primary">.sh</span>
                   </h1>
@@ -99,7 +104,13 @@ export function AppNavigationShell({
                         )}
                       >
                         {"icon" in item ? (
-                          <item.icon className={cn("size-5 shrink-0", getNavIconClasses(isActive, isActivityReport))} strokeWidth={2.1} />
+                          <item.icon
+                            className={cn(
+                              "size-5 shrink-0",
+                              getNavIconClasses(isActive, isActivityReport),
+                            )}
+                            strokeWidth={2.1}
+                          />
                         ) : (
                           <Image
                             alt="AMS"
@@ -123,13 +134,15 @@ export function AppNavigationShell({
                       "flex items-center gap-3 rounded-[1.35rem] px-4 py-3 text-sm font-medium tracking-[0.01em] transition duration-200",
                       pathname.startsWith("/extension")
                         ? "border border-white/70 bg-white/76 text-app-primary shadow-[0_8px_18px_rgba(17,23,40,0.10)]"
-                        : "text-app-ink/72 hover:bg-white/34 hover:text-app-ink"
+                        : "text-app-ink/72 hover:bg-white/34 hover:text-app-ink",
                     )}
                   >
                     <Puzzle
                       className={cn(
                         "size-5 shrink-0",
-                        pathname.startsWith("/extension") ? "text-app-primary" : "text-app-ink/78"
+                        pathname.startsWith("/extension")
+                          ? "text-app-primary"
+                          : "text-app-ink/78",
                       )}
                       strokeWidth={2.1}
                     />
