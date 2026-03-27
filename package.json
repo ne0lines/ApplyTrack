@@ -9,7 +9,8 @@
     "dev:mock": "concurrently --kill-others-on-fail \"npm run mock-server\" \"npm run dev\"",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",
