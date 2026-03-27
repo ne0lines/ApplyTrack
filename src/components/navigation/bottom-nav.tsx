@@ -14,13 +14,13 @@ const navItems = [
     href: "/",
     icon: House,
     label: "Översikt",
-    match: (pathname: string) => pathname === "/" || (pathname.startsWith("/jobb") && pathname !== "/jobb/new"),
+    match: (pathname: string) => pathname === "/",
   },
   {
-    href: "/report",
+    href: "/jobb",
     icon: BriefcaseBusiness,
     label: "Sökta jobb",
-    match: (pathname: string) => pathname.startsWith("/report"),
+    match: (pathname: string) => pathname.startsWith("/jobb"),
   },
   {
     href: "/konto",
@@ -64,7 +64,9 @@ type AppNavigationShellProps = {
   children: React.ReactNode;
 };
 
-export function AppNavigationShell({ children }: Readonly<AppNavigationShellProps>) {
+export function AppNavigationShell({
+  children,
+}: Readonly<AppNavigationShellProps>) {
   const pathname = usePathname();
   const hideNavigation = pathname.startsWith("/auth");
   const showNavigation = !hideNavigation;
@@ -172,7 +174,13 @@ export function AppNavigationShell({ children }: Readonly<AppNavigationShellProp
                     )}
                   >
                     {"icon" in item ? (
-                      <item.icon className={cn("size-5 shrink-0", getNavIconClasses(isActive, isActivityReport))} strokeWidth={2.1} />
+                      <item.icon
+                        className={cn(
+                          "size-5 shrink-0",
+                          getNavIconClasses(isActive, isActivityReport),
+                        )}
+                        strokeWidth={2.1}
+                      />
                     ) : (
                       <Image
                         alt="AMS"
@@ -183,7 +191,9 @@ export function AppNavigationShell({ children }: Readonly<AppNavigationShellProp
                         width={20}
                       />
                     )}
-                    <span className="text-[0.64rem] leading-tight whitespace-normal">{item.label}</span>
+                    <span className="text-[0.64rem] leading-tight whitespace-normal">
+                      {item.label}
+                    </span>
                   </Link>
                 );
               })}
