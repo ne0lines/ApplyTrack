@@ -48,15 +48,17 @@ export default function GDPRPage() {
       {/* 3 */}
       <Card>
         <CardHeader>
-          <CardTitle>3. Google Analytics 4</CardTitle>
+          <CardTitle>3. Anonym användningsstatistik</CardTitle>
         </CardHeader>
         <CardContent className='space-y-2'>
           <p>
-            Vi samlar in anonymiserad statistik om hur appen används (t.ex.
-            sidvisningar och klick)
+            Vi använder PostHog för att samla in anonymiserad statistik om hur
+            appen används (t.ex. sidvisningar och klick). Ingen personlig
+            information samlas in, inga cookies används för spårning, och ingen
+            användarprofil skapas.
           </p>
-          <p>Syftet är att förbättra appen och användarupplevelsen</p>
-          <p>Ingen information om kontaktpersoner används i analysen</p>
+          <p>Syftet är att förbättra appen och användarupplevelsen.</p>
+          <p>Data behandlas inom EU.</p>
         </CardContent>
       </Card>
 

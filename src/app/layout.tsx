@@ -3,10 +3,13 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Bricolage_Grotesque, Inter, Geist } from "next/font/google";
 import "./globals.css";
 import { AppNavigationShell } from "@/components/navigation/bottom-nav";
+import { PostHogProvider } from "@/components/providers/posthog-provider";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { PostHogPageView } from "@/components/analytics/posthog-page-view";
 import { RegisterServiceWorker } from "@/components/pwa/register-service-worker";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
+import { Suspense } from "react";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -61,18 +64,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="sv" className={cn("font-sans", geist.variable)}>
-      <body
-        className={`${bricolageGrotesque.variable} ${inter.variable} min-h-svh antialiased`}
-      >
-        <ClerkProvider>
-          <QueryProvider>
-            <RegisterServiceWorker />
-            <AppNavigationShell>{children}</AppNavigationShell>
-            <Toaster />
-          </QueryProvider>
-        </ClerkProvider>
-      </body>
-    </html>
+    <PostHogProvider>
+      <html lang="sv" className={cn("font-sans", geist.variable)}>
+        <body
+          className={`${bricolageGrotesque.variable} ${inter.variable} min-h-svh antialiased`}
+        >
+          <Suspense fallback={null}>
+            <PostHogPageView />
+          </Suspense>
+          <ClerkProvider>
+            <QueryProvider>
+              <RegisterServiceWorker />
+              <AppNavigationShell>{children}</AppNavigationShell>
+              <Toaster />
+            </QueryProvider>
+          </ClerkProvider>
+        </body>
+      </html>
+    </PostHogProvider>
   );
 }

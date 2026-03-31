@@ -1,7 +1,6 @@
-import { Btn } from "@/components/ui/btn";
 import { auth } from "@clerk/nextjs/server";
-import { Plus } from "lucide-react";
 import { redirect } from "next/navigation";
+import { AddJobBtn } from "@/components/dashboard/add-job-btn";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { makeQueryClient } from "@/lib/hooks/query-client";
 import { jobKeys } from "@/lib/hooks/job-query-keys";
@@ -30,9 +29,7 @@ export default async function Home() {
             <h1 className="font-display text-4xl leading-none md:hidden">
               Jobi<span className="text-app-primary">.sh</span>
             </h1>
-            <Btn className="md:hidden" href="/jobb/new" icon={Plus}>
-              Lägg till jobb
-            </Btn>
+            <AddJobBtn />
           </div>
         </section>
         <HydrationBoundary state={dehydrate(queryClient)}>

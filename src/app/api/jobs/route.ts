@@ -3,6 +3,7 @@ import * as Sentry from "@sentry/nextjs";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { logger } from "@/lib/logger";
+import { getPostHogServer } from "@/lib/posthog-server";
 import type { CreateJobInput, Job } from "@/app/types";
 import { JobStatus } from "@/app/types";
 
@@ -105,6 +106,24 @@ export async function POST(req: NextRequest): Promise<NextResponse<Job | { error
     Sentry.captureException(err, { tags: { route: "POST /api/jobs" } });
     return NextResponse.json({ error: "Det gick inte att skapa jobbet." }, { status: 500 });
   }
+
+  // Track job creation server-side — reliable even when browser navigates away immediately
+  try {
+    const posthog = getPostHogServer();
+    const domain = job.jobUrl
+      ? (() => { try { return new URL(job.jobUrl).hostname.replace(/^www\./, ""); } catch { return null; } })()
+      : null;
+
+    posthog.capture({
+      distinctId: "anonymous",
+      event: "job_created",
+      properties: {
+        ...(domain ? { source_domain: domain } : {}),
+        $process_person_profile: false, // match client-side person_profiles: "never"
+      },
+    });
+    await posthog.flushAsync();
+  } catch { /* analytics failure must never affect the response */ }
 
   return NextResponse.json({
     id: job.id,
