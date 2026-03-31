@@ -1,6 +1,7 @@
 "use client";
 
 import { useCreateJob } from "@/lib/hooks/jobs";
+import { trackEvent } from "@/lib/analytics";
 import { Btn } from "@/components/ui/btn";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
@@ -584,7 +585,7 @@ export default function NewJobPage() {
                       type="button"
                       variant="secondary"
                       icon={TextCursorInput}
-                      onClick={() => setShowManualFields(true)}
+                      onClick={() => { trackEvent("manual_entry_click"); setShowManualFields(true); }}
                     >
                       Lägg till manuellt
                     </Btn>

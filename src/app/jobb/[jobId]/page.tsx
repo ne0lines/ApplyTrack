@@ -6,6 +6,7 @@ import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Loader } from "@/components/ui/loader";
 import { StatusSelect } from "@/components/ui/status-select";
 import { ExternalLink, PencilLine, Trash2 } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 import { useDeleteJob, useJob } from "@/lib/hooks/jobs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -149,6 +150,7 @@ export default function JobDetailPage({
               icon={ExternalLink}
               rel="noreferrer"
               target="_blank"
+              onClick={() => trackEvent("visit_posting_click")}
             >
               Besök annons
             </Btn>
@@ -157,6 +159,7 @@ export default function JobDetailPage({
               className="w-full"
               icon={PencilLine}
               variant="secondary"
+              onClick={() => trackEvent("edit_job_click")}
             >
               Redigera
             </Btn>
@@ -197,7 +200,7 @@ export default function JobDetailPage({
             variant="red"
             className="w-full"
             icon={Trash2}
-            onClick={() => setConfirmOpen(true)}
+            onClick={() => { trackEvent("delete_job_click"); setConfirmOpen(true); }}
           >
             Ta bort jobb
           </Btn>
