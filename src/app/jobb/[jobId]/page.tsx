@@ -7,7 +7,8 @@ import { StatusSelect } from "@/components/ui/status-select";
 import { ExternalLink, PencilLine, Trash2 } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { useDeleteJob, useJob } from "@/lib/hooks/jobs";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { displayEmploymentType, displayWorkload } from "@/lib/job-display";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { use, useState } from "react";
@@ -20,6 +21,7 @@ export default function JobDetailPage({
 }>) {
   const { jobId } = use(params);
   const router = useRouter();
+  const locale = useLocale();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const t = useTranslations("jobDetail");
 
@@ -96,12 +98,12 @@ export default function JobDetailPage({
               <p className="w-full text-base text-app-muted">
                 <strong>{t("employmentType")}</strong>
                 <br />
-                {job.employmentType}
+                {displayEmploymentType(job.employmentType, locale)}
               </p>
               <p className="w-full text-base text-app-muted">
                 <strong>{t("workload")}</strong>
                 <br />
-                {job.workload}
+                {displayWorkload(job.workload, locale)}
               </p>
             </div>
             {(job.contactPerson.name ||

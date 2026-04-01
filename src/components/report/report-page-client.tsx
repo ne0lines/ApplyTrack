@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { getBrowserInstallTarget } from "@/lib/extension-install";
+import { displayWorkload } from "@/lib/job-display";
 import { ExternalLink, X } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
@@ -277,7 +278,7 @@ export function ReportPageClient({ jobs, options }: Readonly<ReportPageClientPro
                           <strong className="text-app-ink">{t("locationLabel")}:</strong> {job.location}
                         </p>
                         <p className="whitespace-nowrap">
-                          <strong className="text-app-ink">{t("workloadLabel")}:</strong> {job.workload}
+                          <strong className="text-app-ink">{t("workloadLabel")}:</strong> {displayWorkload(job.workload, locale)}
                         </p>
                         <p className="whitespace-nowrap">
                           <strong className="text-app-ink">{t("appliedLabel")}:</strong> {formatApplicationDate(job.applicationDate, locale)}
