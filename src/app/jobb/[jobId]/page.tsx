@@ -8,7 +8,7 @@ import { ExternalLink, PencilLine, Trash2 } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { useDeleteJob, useJob } from "@/lib/hooks/jobs";
 import { useLocale, useTranslations } from "next-intl";
-import { displayEmploymentType, displayWorkload } from "@/lib/job-display";
+import { displayEmploymentType, displayTimelineEvent, displayWorkload, formatStoredDate } from "@/lib/job-display";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { use, useState } from "react";
@@ -183,9 +183,9 @@ export default function JobDetailPage({
                     <span className="mt-1 h-3 w-3 shrink-0 rounded-full bg-app-primary-strong ring-3 ring-app-card" />
                     <div>
                       <strong className="block text-md text-app-muted">
-                        {item.date}
+                        {formatStoredDate(item.date, locale)}
                       </strong>
-                      <span className="text-lg">{item.event}</span>
+                      <span className="text-lg">{displayTimelineEvent(item.event, locale)}</span>
                     </div>
                   </li>
                 ))}

@@ -20,35 +20,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { getBrowserInstallTarget } from "@/lib/extension-install";
-import { displayWorkload } from "@/lib/job-display";
+import { displayWorkload, formatStoredDate } from "@/lib/job-display";
 import { ExternalLink, X } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 
-const swedishMonthMap: Record<string, number> = {
-  jan: 0, januari: 0, feb: 1, februari: 1, mar: 2, mars: 2,
-  apr: 3, april: 3, maj: 4, jun: 5, juni: 5, jul: 6, juli: 6,
-  aug: 7, augusti: 7, sep: 8, sept: 8, september: 8,
-  okt: 9, oktober: 9, nov: 10, november: 10, dec: 11, december: 11,
-};
 
-function parseSwedishDateString(value: string): Date | null {
-  const match = /^(\d{1,2})\s+([^\s]+)\s+(\d{4})$/.exec(value.trim().toLowerCase());
-  if (!match) return null;
-  const month = swedishMonthMap[match[2].replace(".", "")];
-  if (month === undefined) return null;
-  return new Date(Number(match[3]), month, Number(match[1]));
-}
-
-function formatApplicationDate(value: string, locale: string): string {
-  const parsed = parseSwedishDateString(value);
-  if (!parsed) return value;
-  return new Intl.DateTimeFormat(locale === "en" ? "en-US" : "sv-SE", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(parsed);
-}
 import { toast } from "sonner";
 
 type ReportPageClientProps = {
@@ -281,7 +258,7 @@ export function ReportPageClient({ jobs, options }: Readonly<ReportPageClientPro
                           <strong className="text-app-ink">{t("workloadLabel")}:</strong> {displayWorkload(job.workload, locale)}
                         </p>
                         <p className="whitespace-nowrap">
-                          <strong className="text-app-ink">{t("appliedLabel")}:</strong> {formatApplicationDate(job.applicationDate, locale)}
+                          <strong className="text-app-ink">{t("appliedLabel")}:</strong> {formatStoredDate(job.applicationDate, locale)}
                         </p>
                       </div>
                     </div>
