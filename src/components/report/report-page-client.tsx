@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { getBrowserInstallTarget } from "@/lib/extension-install";
 import { ExternalLink, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -140,6 +141,7 @@ export function ReportPageClient({ jobs, options }: Readonly<ReportPageClientPro
   const [isExtensionInstalled, setIsExtensionInstalled] = useState<boolean | null>(null);
   const [isInstallDrawerOpen, setIsInstallDrawerOpen] = useState(false);
   const installTarget = useMemo(() => getBrowserInstallTarget(), []);
+  const t = useTranslations("report");
 
   const filteredJobs = useMemo(
     () => jobs.filter((job) => job.monthKey === selectedMonth),
@@ -181,25 +183,25 @@ export function ReportPageClient({ jobs, options }: Readonly<ReportPageClientPro
 
     if (delivered) {
       setIsExtensionInstalled(true);
-      toast.success("Jobbet skickades till extensionen och AF-sidan öppnas.");
+      toast.success(t("reportSuccess"));
       return;
     }
 
     setIsExtensionInstalled(false);
     setIsInstallDrawerOpen(true);
-    toast.error("Extensionen svarade inte. Öppna extensionsidan och installera rätt version för din webbläsare.");
+    toast.error(t("reportError"));
   }
 
   if (options.length === 0) {
     return (
       <main className="min-h-svh pt-4">
         <section className="mx-auto flex w-full max-w-3xl flex-col gap-4 p-5 sm:p-8 md:max-w-none">
-          <h1 className="font-display text-4xl md:text-[2.4rem]">Aktivitetsrapport</h1>
+          <h1 className="font-display text-4xl md:text-[2.4rem]">{t("title")}</h1>
           <p className="text-lg text-app-muted">
-            Det finns inga registrerade ansökningsdatum att rapportera ännu.
+            {t("empty")}
           </p>
           <Btn href="/" variant="secondary">
-            Tillbaka
+            {t("back")}
           </Btn>
         </section>
       </main>
@@ -212,9 +214,9 @@ export function ReportPageClient({ jobs, options }: Readonly<ReportPageClientPro
         <section className="mx-auto flex w-full max-w-3xl flex-col gap-4 md:max-w-none">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h1 className="font-display text-4xl md:text-[2.4rem]">Aktivitetsrapport</h1>
+              <h1 className="font-display text-4xl md:text-[2.4rem]">{t("title")}</h1>
               <p className="text-lg text-app-muted">
-                Välj månad för att se vilka jobb du sökte under perioden.
+                {t("selectMonth")}
               </p>
             </div>
 
@@ -246,13 +248,13 @@ export function ReportPageClient({ jobs, options }: Readonly<ReportPageClientPro
                       <span className="font-bold">{job.title}</span> hos <span className="font-bold">{job.company}</span>
                       <div className="mt-2 flex flex-col gap-1.5 text-sm text-app-muted sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8">
                         <p className="whitespace-nowrap">
-                          <strong className="text-app-ink">Ort:</strong> {job.location}
+                          <strong className="text-app-ink">{t("locationLabel")}:</strong> {job.location}
                         </p>
                         <p className="whitespace-nowrap">
-                          <strong className="text-app-ink">Omfattning:</strong> {job.workload}
+                          <strong className="text-app-ink">{t("workloadLabel")}:</strong> {job.workload}
                         </p>
                         <p className="whitespace-nowrap">
-                          <strong className="text-app-ink">Sökt:</strong> {job.applicationDate}
+                          <strong className="text-app-ink">{t("appliedLabel")}:</strong> {job.applicationDate}
                         </p>
                       </div>
                     </div>
@@ -266,7 +268,7 @@ export function ReportPageClient({ jobs, options }: Readonly<ReportPageClientPro
                     disabled={pendingJobId === job.id}
                     onClick={() => void handleReportClick(job)}
                   >
-                    {pendingJobId === job.id ? "Aktivitetsrapporterar..." : "Aktivitetsrapportera"}
+                    {pendingJobId === job.id ? t("reportingBtn") : t("reportBtn")}
                   </button>
                 </div>
               </article>
@@ -287,7 +289,7 @@ export function ReportPageClient({ jobs, options }: Readonly<ReportPageClientPro
         }}
       >
         <DrawerContent>
-          <DrawerTitle className="sr-only">Installera Jobi.sh Extensionen</DrawerTitle>
+          <DrawerTitle className="sr-only">{t("drawerTitle")}</DrawerTitle>
           <div className="mx-auto flex w-full max-w-[75vw] flex-col gap-6">
             <div className="flex items-start justify-between gap-4">
               <DrawerHeader className="min-w-0 gap-0">
@@ -295,18 +297,17 @@ export function ReportPageClient({ jobs, options }: Readonly<ReportPageClientPro
                   {installTarget.browserLabel} Extension
                 </p>
                 <DrawerTitle id="extension-drawer-title" className="mt-1">
-                  Installera Jobi.sh Extensionen
+                  {t("drawerTitle")}
                 </DrawerTitle>
                 <DrawerDescription className="mt-2">
-                  För att skicka jobb direkt till Arbetsförmedlingen från den här sidan behöver du ha
-                  Jobi.sh Extensionen installerad i {installTarget.browserLabel}.
+                  {t("drawerDescription", { browser: installTarget.browserLabel })}
                 </DrawerDescription>
               </DrawerHeader>
 
               <DrawerClose asChild>
                 <button
                   type="button"
-                  aria-label="Stäng drawer"
+                  aria-label={t("closeDrawer")}
                   className="inline-flex size-11 items-center justify-center rounded-2xl border border-app-stroke bg-white text-app-muted transition hover:text-app-ink"
                 >
                   <X aria-hidden="true" size={18} strokeWidth={2.1} />
@@ -324,7 +325,7 @@ export function ReportPageClient({ jobs, options }: Readonly<ReportPageClientPro
                   type="button"
                   className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-app-stroke bg-white px-5 text-base font-semibold text-app-ink transition hover:border-app-primary/35 hover:text-app-primary"
                 >
-                  Inte nu
+                  {t("notNow")}
                 </button>
               </DrawerClose>
 

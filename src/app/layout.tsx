@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Bricolage_Grotesque, Inter, Geist } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import Script from "next/script";
 import "./globals.css";
 import { AppNavigationShell } from "@/components/navigation/bottom-nav";
@@ -64,15 +66,18 @@ export const viewport: Viewport = {
   themeColor: "#6e33eb",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
     <PostHogProvider>
       <html
-        lang="sv"
+        lang={locale}
         className={cn("font-sans", geist.variable)}
         style={{ colorScheme: DEFAULT_THEME_PREFERENCE }}
         suppressHydrationWarning
@@ -86,15 +91,17 @@ export default function RootLayout({
           <Suspense fallback={null}>
             <PostHogPageView />
           </Suspense>
-          <ClerkProvider>
-            <ThemeProvider>
-              <QueryProvider>
-                <RegisterServiceWorker />
-                <AppNavigationShell>{children}</AppNavigationShell>
-                <Toaster />
-              </QueryProvider>
-            </ThemeProvider>
-          </ClerkProvider>
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            <ClerkProvider>
+              <ThemeProvider>
+                <QueryProvider>
+                  <RegisterServiceWorker />
+                  <AppNavigationShell>{children}</AppNavigationShell>
+                  <Toaster />
+                </QueryProvider>
+              </ThemeProvider>
+            </ClerkProvider>
+          </NextIntlClientProvider>
         </body>
       </html>
     </PostHogProvider>

@@ -2,6 +2,7 @@
 
 import { Btn } from "@/components/ui/btn";
 import { useClerk } from "@clerk/nextjs";
+import { useTranslations } from "next-intl";
 
 type LogoutBtnProps = {
   className?: string;
@@ -9,6 +10,7 @@ type LogoutBtnProps = {
 
 export function LogoutBtn({ className }: Readonly<LogoutBtnProps>) {
   const { signOut } = useClerk();
+  const t = useTranslations();
 
   return (
     <Btn
@@ -16,7 +18,7 @@ export function LogoutBtn({ className }: Readonly<LogoutBtnProps>) {
       onClick={() => signOut({ redirectUrl: "/" })}
       variant="red"
     >
-      Logga ut
+      {t("logout")}
     </Btn>
   );
 }

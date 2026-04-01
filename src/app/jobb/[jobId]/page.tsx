@@ -7,6 +7,7 @@ import { StatusSelect } from "@/components/ui/status-select";
 import { ExternalLink, PencilLine, Trash2 } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { useDeleteJob, useJob } from "@/lib/hooks/jobs";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { use, useState } from "react";
@@ -20,6 +21,7 @@ export default function JobDetailPage({
   const { jobId } = use(params);
   const router = useRouter();
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const t = useTranslations("jobDetail");
 
   const { data: job, isLoading, isError } = useJob(jobId);
   const deleteJobMutation = useDeleteJob();
@@ -27,7 +29,7 @@ export default function JobDetailPage({
   function handleDelete() {
     deleteJobMutation.mutate(jobId, {
       onSuccess: () => {
-        toast.success("Jobbet togs bort.");
+        toast.success(t("deleteSuccess"));
         setConfirmOpen(false);
         router.push("/");
       },
@@ -35,7 +37,7 @@ export default function JobDetailPage({
         toast.error(
           error instanceof Error
             ? error.message
-            : "Kunde inte ta bort annonsen.",
+            : t("deleteError"),
         );
       },
     });
@@ -45,7 +47,7 @@ export default function JobDetailPage({
     return (
       <main className="flex min-h-svh flex-col items-center justify-center gap-3">
         <Loader size={40} />
-        <p className="text-sm text-app-muted">Laddar jobbdetaljer...</p>
+        <p className="text-sm text-app-muted">{t("loading")}</p>
       </main>
     );
   }
@@ -55,13 +57,13 @@ export default function JobDetailPage({
       <main className="min-h-svh pt-4">
         <section className="flex w-full max-w-3xl flex-col gap-4 p-5 sm:p-8 md:max-w-none">
           <h1 className="font-display text-4xl md:text-[2.4rem]">
-            Jobbdetaljer
+            {t("title")}
           </h1>
           <p className="text-base text-app-muted sm:text-lg">
-            Jobbet kunde inte hittas.
+            {t("notFound")}
           </p>
           <Btn href="/" variant="secondary">
-            Tillbaka
+            {t("back")}
           </Btn>
         </section>
       </main>
@@ -71,33 +73,33 @@ export default function JobDetailPage({
   return (
     <main className="min-h-svh pt-4">
       <section className="flex flex-col gap-4 w-full">
-        <h1 className="font-display text-4xl md:text-[2.4rem]">Jobbdetaljer</h1>
+        <h1 className="font-display text-4xl md:text-[2.4rem]">{t("title")}</h1>
         <p className="text-base text-app-muted sm:text-lg">
-          Följ status, historik och nästa steg
+          {t("subtitle")}
         </p>
         <div className="flex flex-col gap-4">
           <article className="rounded-2xl border border-app-stroke bg-app-card p-4">
             <h2 className="font-display text-xl">{job.title}</h2>
             <div className="flex mt-2 gap-4">
               <p className="w-full text-base text-app-muted">
-                <strong>Företag</strong>
+                <strong>{t("company")}</strong>
                 <br />
                 {job.company}
               </p>
               <p className="w-full text-base text-app-muted">
-                <strong>Plats</strong>
+                <strong>{t("location")}</strong>
                 <br />
                 {job.location}
               </p>
             </div>
             <div className="flex mt-2 gap-4">
               <p className="w-full text-base text-app-muted">
-                <strong>Anställningsform</strong>
+                <strong>{t("employmentType")}</strong>
                 <br />
                 {job.employmentType}
               </p>
               <p className="w-full text-base text-app-muted">
-                <strong>Omfattning</strong>
+                <strong>{t("workload")}</strong>
                 <br />
                 {job.workload}
               </p>
@@ -107,7 +109,7 @@ export default function JobDetailPage({
               job.contactPerson.email ||
               job.contactPerson.phone) && (
                 <>
-                  <h3 className="mt-3 font-display text-xl">Kontaktperson</h3>
+                  <h3 className="mt-3 font-display text-xl">{t("contact")}</h3>
                   {(job.contactPerson.name || job.contactPerson.role) && (
                     <p className="text-base text-app-muted">
                       {job.contactPerson.name && (
@@ -119,7 +121,7 @@ export default function JobDetailPage({
                   )}
                   {job.contactPerson.email && (
                     <p className="text-base text-app-muted">
-                      <strong>E-post:</strong>{" "}
+                      <strong>{t("emailLabel")}:</strong>{" "}
                       <Link
                         href={`mailto:${job.contactPerson.email}`}
                         className="font-medium text-app-primary"
@@ -130,7 +132,7 @@ export default function JobDetailPage({
                   )}
                   {job.contactPerson.phone && (
                     <p className="text-base text-app-muted">
-                      <strong>Telefon:</strong>{" "}
+                      <strong>{t("phoneLabel")}:</strong>{" "}
                       <Link
                         href={`tel:${job.contactPerson.phone}`}
                         className="font-medium text-app-primary"
@@ -151,7 +153,7 @@ export default function JobDetailPage({
               target="_blank"
               onClick={() => trackEvent("visit_posting_click")}
             >
-              Besök annons
+              {t("visitPosting")}
             </Btn>
             <Btn
               href={`/jobb/${job.id}/edit`}
@@ -160,11 +162,11 @@ export default function JobDetailPage({
               variant="secondary"
               onClick={() => trackEvent("edit_job_click")}
             >
-              Redigera
+              {t("edit")}
             </Btn>
           </div>
           <article className="rounded-2xl border border-app-stroke bg-app-card p-4">
-            <h3 className="mb-2 text-xl font-display">Historik</h3>
+            <h3 className="mb-2 text-xl font-display">{t("history")}</h3>
             <div className="relative mt-2">
               <div
                 aria-hidden="true"
@@ -192,7 +194,7 @@ export default function JobDetailPage({
         </div>
         <div className="flex w-full gap-4">
           <Btn variant="secondary" className="w-1/2" href="/">
-            Tillbaka
+            {t("back")}
           </Btn>
           <Btn
             type="button"
@@ -201,16 +203,16 @@ export default function JobDetailPage({
             icon={Trash2}
             onClick={() => { trackEvent("delete_job_click"); setConfirmOpen(true); }}
           >
-            Ta bort jobb
+            {t("deleteBtn")}
           </Btn>
         </div>
 
         <ConfirmDialog
           open={confirmOpen}
           onOpenChange={setConfirmOpen}
-          title="Ta bort jobb?"
-          description="Det här går inte att ångra. Jobbet och all tillhörande information tas bort permanent."
-          confirmLabel="Ta bort"
+          title={t("deleteTitle")}
+          description={t("deleteDescription")}
+          confirmLabel={t("deleteConfirm")}
           onConfirm={() => handleDelete()}
           isLoading={deleteJobMutation.isPending}
         />

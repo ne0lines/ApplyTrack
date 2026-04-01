@@ -1,5 +1,7 @@
+"use client";
+
 import { Job, JobStatus } from "@/app/types";
-import { Sparkles } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import Board from "./board";
 import { QuickImportInput } from "./quick-import-input";
@@ -58,8 +60,8 @@ function parseSwedishDate(value: string): Date | null {
   return new Date(year, month, day);
 }
 
-function formatDueDate(date: Date): string {
-  return new Intl.DateTimeFormat("sv-SE", {
+function formatDueDate(date: Date, locale: string): string {
+  return new Intl.DateTimeFormat(locale === "en" ? "en-US" : "sv-SE", {
     day: "numeric",
     month: "long",
   }).format(date);
@@ -95,7 +97,11 @@ function getInterviewDate(job: Job): Date | null {
   return getAppliedDate(job);
 }
 
-function getTodoItems(jobs: Job[]): TodoItem[] {
+function getTodoItems(
+  jobs: Job[],
+  locale: string,
+  t: (key: string, values?: Record<string, string>) => string,
+): TodoItem[] {
   const now = new Date();
 
   return jobs
@@ -116,8 +122,8 @@ function getTodoItems(jobs: Job[]): TodoItem[] {
             jobId: job.id,
             text:
               dueDate < now
-                ? `Skicka ansökan till ${job.company} för ${job.title} så snart som möjligt. Den borde ha skickats senast ${formatDueDate(dueDate)}.`
-                : `Skicka ansökan till ${job.company} för ${job.title} senast ${formatDueDate(dueDate)}.`,
+                ? t("todoSavedOverdue", { company: job.company, title: job.title, date: formatDueDate(dueDate, locale) })
+                : t("todoSaved", { company: job.company, title: job.title, date: formatDueDate(dueDate, locale) }),
           },
         ];
       }
@@ -140,7 +146,7 @@ function getTodoItems(jobs: Job[]): TodoItem[] {
             dueAt: followUpDate.getTime(),
             id: `${job.id}-applied`,
             jobId: job.id,
-            text: `Följ upp ansökan hos ${job.company} för ${job.title}. Det har gått 14 dagar sedan du skickade ansökan.`,
+            text: t("todoApplied", { company: job.company, title: job.title }),
           },
         ];
       }
@@ -163,7 +169,7 @@ function getTodoItems(jobs: Job[]): TodoItem[] {
             dueAt: contactDate.getTime(),
             id: `${job.id}-interview`,
             jobId: job.id,
-            text: `Kontakta ${job.company} om ${job.title}. Det har gått 7 dagar sedan intervjun utan svar.`,
+            text: t("todoInterview", { company: job.company, title: job.title }),
           },
         ];
       }
@@ -174,6 +180,9 @@ function getTodoItems(jobs: Job[]): TodoItem[] {
 }
 
 export default function Pipeline({ jobs }: Readonly<{ jobs: Job[] }>) {
+  const t = useTranslations("dashboard");
+  const locale = useLocale();
+
   if (jobs.length === 0) {
     return (
       <section className="w-full">
@@ -181,10 +190,10 @@ export default function Pipeline({ jobs }: Readonly<{ jobs: Job[] }>) {
           <div className="flex flex-col gap-4">
             <div>
               <h2 className="font-display text-3xl leading-tight md:text-[2rem]">
-                Din nästa möjlighet börjar här.
+                {t("emptyHeadline")}
               </h2>
               <p className="mt-3 text-base text-app-muted sm:text-lg">
-                När du sparar dina jobb här får du en tydlig översikt, statistik och nästa steg samlat på ett ställe. Detta ger dig ett avsevärt mycket enklare workflow i ditt arbetssökande och när det är dags att aktivitetsrapportera till Arbetsförmedlingen.
+                {t("emptyDescription")}
               </p>
             </div>
 
@@ -202,12 +211,12 @@ export default function Pipeline({ jobs }: Readonly<{ jobs: Job[] }>) {
   const interviewed = jobs.filter((j) => j.status === JobStatus.INTERVIEW);
   const inProcess = jobs.filter((j) => j.status === JobStatus.IN_PROCESS);
   const offers = jobs.filter((j) => j.status === JobStatus.OFFER);
-  const todoItems = getTodoItems(jobs);
+  const todoItems = getTodoItems(jobs, locale, t);
 
   return (
     <section className="w-full">
       <article className="mt-4 rounded-2xl border border-app-stroke bg-app-card p-4">
-        <h3 className="mb-2 text-xl font-display">Att göra</h3>
+        <h3 className="mb-2 text-xl font-display">{t("todo")}</h3>
         {todoItems.length > 0 ? (
           <div className="divide-y divide-app-stroke text-base text-app-muted">
             {todoItems.map((item) => (
@@ -222,16 +231,16 @@ export default function Pipeline({ jobs }: Readonly<{ jobs: Job[] }>) {
           </div>
         ) : (
           <p className="text-base text-app-muted">
-            Inget att följa upp just nu.
+            {t("todoEmpty")}
           </p>
         )}
       </article>
-      <h2 className="mt-6 mb-3 font-display text-3xl md:text-[1.75rem]">Pipeline</h2>
+      <h2 className="mt-6 mb-3 font-display text-3xl md:text-[1.75rem]">{t("pipeline")}</h2>
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         {applied.length > 0 && (
           <Board
             jobs={applied}
-            label={"Ansökt"}
+            label={t("boardApplied")}
             borderColor="border-blue-400"
             bgColor="bg-blue-100"
           />
@@ -240,7 +249,7 @@ export default function Pipeline({ jobs }: Readonly<{ jobs: Job[] }>) {
         {inProcess.length > 0 && (
           <Board
             jobs={inProcess}
-            label={"Pågår"}
+            label={t("boardInProcess")}
             borderColor="border-amber-400"
             bgColor="bg-amber-100"
           />
@@ -249,7 +258,7 @@ export default function Pipeline({ jobs }: Readonly<{ jobs: Job[] }>) {
         {interviewed.length > 0 && (
           <Board
             jobs={interviewed}
-            label={"Intervju"}
+            label={t("boardInterview")}
             borderColor="border-cyan-400"
             bgColor="bg-cyan-100"
           />
@@ -257,12 +266,12 @@ export default function Pipeline({ jobs }: Readonly<{ jobs: Job[] }>) {
         {offers.length > 0 && (
           <Board
             jobs={offers}
-            label={"Erbjudande"}
+            label={t("boardOffer")}
             borderColor="border-green-400"
             bgColor="bg-green-100"
           />
         )}
-        {saved.length > 0 && <Board jobs={saved} label={"Sparat"} />}
+        {saved.length > 0 && <Board jobs={saved} label={t("boardSaved")} />}
       </div>
     </section>
   );

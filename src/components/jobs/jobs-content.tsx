@@ -5,27 +5,29 @@ import { trackEvent } from "@/lib/analytics";
 import { Btn } from "@/components/ui/btn";
 import { DeleteJobBtn } from "@/components/jobs/delete-job-btn";
 import { Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 export function JobsContent() {
   const { data: jobs = [] } = useJobs();
+  const t = useTranslations("jobs");
 
   return (
     <section className="flex w-full flex-col gap-4">
       <div className="flex items-center justify-between gap-3">
-        <h1 className="font-display text-4xl sm:text-6xl">Jobb</h1>
-        <Btn href="/jobb/new" icon={Plus} onClick={() => trackEvent("add_job_click", { location: "jobs-list" })}>Lägg till</Btn>
+        <h1 className="font-display text-4xl sm:text-6xl">{t("title")}</h1>
+        <Btn href="/jobb/new" icon={Plus} onClick={() => trackEvent("add_job_click", { location: "jobs-list" })}>{t("addBtn")}</Btn>
       </div>
 
       {jobs.length === 0 ? (
-        <p className="text-base text-app-muted">Inga jobb sparade än.</p>
+        <p className="text-base text-app-muted">{t("empty")}</p>
       ) : (
         <ul className="space-y-2">
           {jobs.map((job) => (
             <li key={job.id} className="relative rounded-2xl border border-app-stroke bg-app-card transition hover:-translate-y-0.5 hover:shadow-sm">
               <Link href={`/jobb/${job.id}`}>
                 <span className="absolute inset-0 rounded-2xl" aria-hidden="true" />
-                <span className="sr-only">Läs mer om {job.title}</span>
+                <span className="sr-only">{t("readMore", { title: job.title })}</span>
               </Link>
               <div className="flex items-center justify-between gap-2 p-4">
                 <div className="min-w-0">

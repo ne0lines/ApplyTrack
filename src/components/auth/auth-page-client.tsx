@@ -2,33 +2,17 @@
 
 import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
 import { useAuth, useSignIn, useSignUp } from "@clerk/nextjs";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Btn } from "../ui/btn";
-
-const CLERK_ERROR_MESSAGES: Record<string, string> = {
-  form_code_incorrect: "Felaktig kod. Kontrollera och försök igen.",
-  verification_expired: "Koden har gått ut. Begär en ny kod.",
-  too_many_requests: "För många försök. Vänta en stund och försök igen.",
-  form_identifier_not_found: "Ingen användare hittades med den e-postadressen.",
-  form_password_incorrect: "Felaktigt lösenord.",
-  identifier_already_signed_in: "Du är redan inloggad.",
-  session_exists: "En aktiv session finns redan.",
-  verification_failed: "Verifiering misslyckades. Försök igen.",
-  strategy_for_user_invalid: "Inloggningsmetoden stöds inte för det här kontot.",
-  not_allowed_access: "Åtkomst nekad.",
-};
-
-function clerkErrorMessage(code: string | undefined): string {
-  if (!code) return "Något gick fel. Försök igen.";
-  return CLERK_ERROR_MESSAGES[code] ?? `Något gick fel. Försök igen. (${code})`;
-}
 
 export default function AuthPageClient() {
   const { isSignedIn } = useAuth();
   const { signIn } = useSignIn();
   const { signUp } = useSignUp();
   const router = useRouter();
+  const t = useTranslations("auth");
 
   const [emailAddress, setEmailAddress] = useState("");
   const [code, setCode] = useState("");
@@ -37,6 +21,17 @@ export default function AuthPageClient() {
   const [loading, setLoading] = useState<"submit" | "verify" | "resend" | null>(
     null,
   );
+
+  function clerkErrorMessage(errorCode: string | undefined): string {
+    if (!errorCode) return t("errors.unknown");
+    const key = `errors.${errorCode}` as Parameters<typeof t>[0];
+    try {
+      const msg = t(key);
+      return msg !== key ? msg : t("errors.unknown", { code: errorCode });
+    } catch {
+      return t("errors.unknown");
+    }
+  }
 
   const navigate = (decorateUrl: (url: string) => string) => {
     const url = decorateUrl("/");
@@ -155,9 +150,9 @@ export default function AuthPageClient() {
         </h1>
         <section className="mx-auto flex min-h-dvh w-full flex-col gap-4">
           <div className="flex w-full flex-1 flex-col items-center justify-center gap-4">
-            <h2 className="text-2xl">Verifiera e-post</h2>
+            <h2 className="text-2xl">{t("verifyTitle")}</h2>
             <p>
-              Vi har skickat en verifikationskod till:{" "}
+              {t("verifyDescription")}{" "}
               <strong>{emailAddress}</strong>
             </p>
             <form
@@ -165,7 +160,7 @@ export default function AuthPageClient() {
               className="w-full space-y-4 rounded-2xl border border-app-stroke bg-app-card p-4"
             >
               <div>
-                <label htmlFor="code">Ange verifikationskod</label>
+                <label htmlFor="code">{t("verifyCodeLabel")}</label>
                 <input
                   className="mt-2 w-full rounded-2xl border border-app-stroke bg-white px-4 py-3.5 text-base text-app-ink outline-none transition focus:border-app-primary focus:ring-2 focus:ring-app-primary/20"
                   id="code"
@@ -181,7 +176,7 @@ export default function AuthPageClient() {
                 )}
               </div>
               <Btn className="w-full" disabled={loading !== null} type="submit">
-                {loading === "verify" ? "Verifierar..." : "Fortsätt"}
+                {loading === "verify" ? t("verifying") : t("verifyBtn")}
               </Btn>
               <div className="flex items-center justify-center gap-4">
                 <Btn
@@ -195,7 +190,7 @@ export default function AuthPageClient() {
                   }}
                   variant="secondary"
                 >
-                  {loading === "resend" ? "Skickar..." : "Skicka ny kod"}
+                  {loading === "resend" ? t("resending") : t("resendBtn")}
                 </Btn>
                 <Btn
                   type="button"
@@ -208,7 +203,7 @@ export default function AuthPageClient() {
                   }}
                   variant="red"
                 >
-                  Börja om
+                  {t("resetBtn")}
                 </Btn>
               </div>
             </form>
@@ -227,18 +222,18 @@ export default function AuthPageClient() {
           </h1>
         </div>
         <div className="flex w-full flex-1 flex-col items-center justify-center gap-4">
-          <h2 className="text-2xl">Logga in eller skapa konto</h2>
+          <h2 className="text-2xl">{t("loginTitle")}</h2>
           <form
             onSubmit={handleSubmit}
             className="w-full space-y-4 rounded-2xl border border-app-stroke bg-app-card p-4"
           >
             <label className="block font-semibold text-app-muted">
-              <span className="block">E-postadress</span>
+              <span className="block">{t("emailLabel")}</span>
               <input
                 className="mt-2 w-full rounded-2xl border border-app-stroke bg-white px-4 py-3.5 text-base text-app-ink outline-none transition focus:border-app-primary focus:ring-2 focus:ring-app-primary/20"
                 id="email"
                 name="email"
-                placeholder="namn@epost.se"
+                placeholder={t("emailPlaceholder")}
                 required
                 type="email"
                 value={emailAddress}
@@ -253,7 +248,7 @@ export default function AuthPageClient() {
             ) : null}
 
             <Btn className="w-full" disabled={loading !== null} type="submit">
-              {loading === "submit" ? "Loggar in..." : "Fortsätt"}
+              {loading === "submit" ? t("loggingIn") : t("continueBtn")}
             </Btn>
             <div id="clerk-captcha" />
           </form>
