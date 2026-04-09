@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { ThemePreferenceCard } from '@/components/account/theme-preference-card';
 import { LogoutBtn } from '@/components/auth/logout-btn';
 import { auth } from '@clerk/nextjs/server';
@@ -78,12 +79,17 @@ export default async function AccountPage() {
               Integritet & Data
             </dt>
             <dd>
-              <a
-                href='/gdpr'
-                className='text-app-muted underline-offset-4 underline'
+              <Link
+                href='/privacy'
+                className='text-app-muted underline underline-offset-4'
               >
+                Integritetspolicy
+              </Link>
+            </dd>
+            <dd>
+              <Link href='/gdpr' className='text-app-muted underline underline-offset-4'>
                 GDPR-information
-              </a>
+              </Link>
             </dd>
             <dd>Vid radering av konto raderas samtliga personuppgifter.</dd>
           </dl>

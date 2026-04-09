@@ -79,7 +79,8 @@ export function AppNavigationShell({
     pathname.startsWith("/auth") ||
     pathname.startsWith("/konto/create-profile") ||
     pathname.startsWith("/terms") ||
-    pathname.startsWith("/gdpr");
+    pathname.startsWith("/gdpr") ||
+    pathname.startsWith("/privacy");
   const showNavigation = !hideNavigation;
 
   return (
