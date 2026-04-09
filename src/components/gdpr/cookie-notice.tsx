@@ -1,18 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const STORAGE_KEY = "cookie-notice-dismissed";
 
 export function CookieNotice() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    if (!localStorage.getItem(STORAGE_KEY)) {
-      setVisible(true);
+  const [visible, setVisible] = useState(() => {
+    if (typeof window === "undefined") {
+      return false;
     }
-  }, []);
+
+    return !localStorage.getItem(STORAGE_KEY);
+  });
 
   function dismiss() {
     localStorage.setItem(STORAGE_KEY, "1");
@@ -28,7 +28,7 @@ export function CookieNotice() {
           Den här appen använder cookies för inloggning. Inga spårningscookies
           används.{" "}
           <Link
-            href="/gdpr"
+            href="/privacy"
             className="text-app-primary underline underline-offset-2"
           >
             Läs mer

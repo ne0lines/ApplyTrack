@@ -201,14 +201,23 @@ export default function CreateProfilePage() {
                 >
                   användarvillkoren
                 </Link>{' '}
-                och{' '}
+                och bekräftar att jag har läst{' '}
+                <Link
+                  className='font-semibold text-app-primary underline underline-offset-2'
+                  href='/privacy'
+                  rel='noreferrer'
+                  target='_blank'
+                >
+                  integritetspolicyn
+                </Link>{' '}
+                samt{' '}
                 <Link
                   className='font-semibold text-app-primary underline underline-offset-2'
                   href='/gdpr'
                   rel='noreferrer'
                   target='_blank'
                 >
-                  GDPR
+                  GDPR-informationen
                 </Link>{' '}
                 för Jobi.sh.
               </span>
