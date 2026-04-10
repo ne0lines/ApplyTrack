@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import type { Job } from "@/app/types";
+import type { Job, UserOnboardingFlags } from "@/app/types";
 import { JobStatus } from "@/app/types";
 import { auth } from "@clerk/nextjs/server";
 
@@ -112,4 +112,20 @@ export async function getLandingJobsServer(): Promise<Job[]> {
   });
 
   return jobs.map((job) => toAppJob(job));
+}
+
+export async function getUserOnboardingFlags(): Promise<UserOnboardingFlags | null> {
+  const { userId } = await auth();
+  if (!userId) return null;
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      onboardingDismissed: true,
+      onboardingPipelineExplored: true,
+      onboardingReportViewed: true,
+    },
+  });
+
+  return user ?? null;
 }
