@@ -54,3 +54,7 @@ CLAUDE.md
 
 # local VS Code MCP config can contain secrets
 /.vscode/mcp.json
+/.superpowers/brainstorm
+/.worktrees
+/docs/superpowers/specs
+/docs/superpowers/plans

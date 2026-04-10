@@ -25,6 +25,7 @@ const featureCards = [
       "Samla jobb i en vy som visar vad som krävs härnäst. Tydligt och enkelt att följa upp utan att behöva hålla reda på egna anteckningar eller kalkylark.",
     cardClassName: "bg-app-sky text-app-ink",
     iconClassName: "bg-white/75 text-app-primary",
+    headingClassName: "text-app-primary",
   },
   {
     icon: BarChart3,
@@ -33,6 +34,7 @@ const featureCards = [
       "Få en snabb bild av dina ansökningar, intervjuer och erbjudanden utan kalkylark eller manuell summering.",
     cardClassName: "bg-app-sand text-app-ink md:translate-y-8",
     iconClassName: "bg-white/75 text-app-sand-strong",
+    headingClassName: "text-app-sand-strong",
   },
   {
     icon: Puzzle,
@@ -41,6 +43,7 @@ const featureCards = [
       "Importera jobbannonserna direkt från Platsbanken. Aktivitetsrapportera med bara ett klick när du loggar in på Arbetsförmedlingen.",
     cardClassName: "bg-app-green text-app-ink",
     iconClassName: "bg-white/75 text-app-green-strong",
+    headingClassName: "text-app-green-strong",
   },
 ] as const;
 
@@ -329,7 +332,7 @@ export function LandingPage({ heroHighlights, signedIn }: Readonly<LandingPagePr
                       <div className={`inline-flex size-12 items-center justify-center rounded-2xl ${feature.iconClassName}`}>
                         <Icon className="size-5" strokeWidth={2.2} />
                       </div>
-                      <h3 className="mt-5 font-display text-2xl leading-tight text-app-ink">
+                      <h3 className={`mt-5 font-display text-2xl leading-tight ${feature.headingClassName}`}>
                         {feature.title}
                       </h3>
                       <p className="mt-3 text-base leading-7 text-app-muted text-pretty">
@@ -339,7 +342,7 @@ export function LandingPage({ heroHighlights, signedIn }: Readonly<LandingPagePr
 
                     {feature.title === "Webbläsartillägg i vardagen" ? (
                       <div className="mt-6">
-                        <Link href="/extension" className="inline-flex items-center gap-2 text-sm font-semibold text-app-ink transition hover:text-app-primary">
+                        <Link href="/extension" className="inline-flex items-center gap-2 text-sm font-semibold text-app-muted transition hover:text-app-primary">
                           Läs mer om extension
                           <ArrowRight className="size-4" strokeWidth={2.2} />
                         </Link>

@@ -1,4 +1,4 @@
-import type { CreateJobInput, Job, UpdateJobInput } from "../types";
+import type { CreateJobInput, Job, UpdateJobInput, UserOnboardingFlags } from "../types";
 
 const API_BASE = "/api/jobs";
 
@@ -79,5 +79,19 @@ export async function deleteJob(id: string): Promise<void> {
   });
   if (!res.ok) {
     throw new Error(await getErrorMessage(res, `Failed to delete job ${id}`));
+  }
+}
+
+type PatchUserInput = Partial<UserOnboardingFlags>;
+
+/** PATCH onboarding flags on the current user */
+export async function patchUser(input: PatchUserInput): Promise<void> {
+  const res = await fetch("/api/user", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+  if (!res.ok) {
+    throw new Error(await getErrorMessage(res, "Failed to update user"));
   }
 }

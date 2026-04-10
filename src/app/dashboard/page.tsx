@@ -4,8 +4,15 @@ import { AddJobBtn } from "@/components/dashboard/add-job-btn";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { makeQueryClient } from "@/lib/hooks/query-client";
 import { jobKeys } from "@/lib/hooks/job-query-keys";
-import { getJobsServer } from "@/server/queries";
+import { getJobsServer, getUserOnboardingFlags } from "@/server/queries";
 import { DashboardContent } from "@/components/dashboard/dashboard-content";
+import type { UserOnboardingFlags } from "@/app/types";
+
+const DEFAULT_FLAGS: UserOnboardingFlags = {
+  onboardingDismissed: false,
+  onboardingPipelineExplored: false,
+  onboardingReportViewed: false,
+};
 
 export default async function DashboardPage() {
   const { userId } = await auth();
@@ -16,10 +23,13 @@ export default async function DashboardPage() {
 
   const queryClient = makeQueryClient();
 
-  await queryClient.prefetchQuery({
-    queryKey: jobKeys.all(),
-    queryFn: () => getJobsServer(),
-  });
+  const [, userFlags] = await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: jobKeys.all(),
+      queryFn: () => getJobsServer(),
+    }),
+    getUserOnboardingFlags(),
+  ]);
 
   return (
     <main className="min-h-svh">
@@ -33,7 +43,7 @@ export default async function DashboardPage() {
           </div>
         </section>
         <HydrationBoundary state={dehydrate(queryClient)}>
-          <DashboardContent />
+          <DashboardContent userFlags={userFlags ?? DEFAULT_FLAGS} />
         </HydrationBoundary>
       </div>
     </main>

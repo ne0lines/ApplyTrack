@@ -40,7 +40,7 @@ export default function AuthPageClient() {
   );
 
   const navigate = (decorateUrl: (url: string) => string) => {
-    const url = decorateUrl("/");
+    const url = decorateUrl(process.env.NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL || "/dashboard");
     if (url.startsWith("http")) {
       globalThis.location.href = url;
     } else {

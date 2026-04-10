@@ -98,3 +98,9 @@ export type Db = {
   applications: Job[];
 };
 
+export type UserOnboardingFlags = {
+  onboardingDismissed: boolean;
+  onboardingPipelineExplored: boolean;
+  onboardingReportViewed: boolean;
+};
+
