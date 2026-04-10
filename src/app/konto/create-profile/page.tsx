@@ -39,6 +39,10 @@ export default function CreateProfilePage() {
         const res = await fetch('/api/user');
         if (res.ok) {
           const data = (await res.json()) as ExistingProfile;
+          if (data.termsVersion === TERMS_VERSION) {
+            router.replace('/dashboard');
+            return;
+          }
           setExistingProfile(data);
           setForm({ name: data.name, profession: data.profession });
         }
@@ -49,7 +53,7 @@ export default function CreateProfilePage() {
       }
     }
     void fetchProfile();
-  }, []);
+  }, [router]);
 
   const needsTermsUpdate =
     existingProfile !== null && existingProfile.termsVersion !== TERMS_VERSION;

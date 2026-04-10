@@ -13,7 +13,8 @@ const todoStateLabels: Record<TodoItem["state"], string> = {
 };
 
 const todoStateClassNames: Record<TodoItem["state"], string> = {
-  overdue: "bg-app-blush text-app-red-strong dark:bg-[#3d2823] dark:text-[#ff9395]",
+  overdue:
+    "bg-app-blush text-app-red-strong dark:bg-[#3d2823] dark:text-[#ff9395]",
   today: "bg-app-sand text-[#7a4b00] dark:bg-[#3a2a0f] dark:text-[#ffd38a]",
   soon: "bg-app-cyan text-app-cyan-strong dark:bg-[#123348] dark:text-[#8edcff]",
   upcoming: "bg-blue-100 text-[#295a99] dark:bg-[#123348] dark:text-[#9bc2ff]",
@@ -39,7 +40,7 @@ const jobStatusLabels: Record<JobStatus, string> = {
 export default function Pipeline({ jobs }: Readonly<{ jobs: Job[] }>) {
   if (jobs.length === 0) {
     return (
-      <section className="app-page-content w-full">
+      <section className="app-page-content w-full py-6">
         <article className="overflow-hidden">
           <div className="app-page-content-compact">
             <div>
@@ -47,12 +48,11 @@ export default function Pipeline({ jobs }: Readonly<{ jobs: Job[] }>) {
                 Din nästa möjlighet börjar här.
               </h2>
               <p className="mt-3 text-base text-app-muted sm:text-lg">
-                När du sparar dina jobb här får du en tydlig översikt, statistik och nästa steg samlat på ett ställe. Detta ger dig ett avsevärt mycket enklare workflow i ditt arbetssökande och när det är dags att aktivitetsrapportera till Arbetsförmedlingen.
+                När du sparar dina jobb här får du en tydlig översikt, statistik
+                och nästa steg samlat på ett ställe. Detta ger dig ett avsevärt
+                mycket enklare workflow i ditt arbetssökande och när det är dags
+                att aktivitetsrapportera till Arbetsförmedlingen.
               </p>
-            </div>
-
-            <div className="py-20">
-              <QuickImportInput />
             </div>
           </div>
         </article>

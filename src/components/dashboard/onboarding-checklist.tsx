@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import type { Job, UserOnboardingFlags } from "@/app/types";
@@ -62,8 +62,27 @@ export function OnboardingChecklist({
     }
   }
 
-  if (dismissed || userFlags.onboardingDismissed || allDone) {
+  if (dismissed || userFlags.onboardingDismissed) {
     return null;
+  }
+
+  if (allDone) {
+    return (
+      <article className="mt-4 rounded-2xl border border-app-stroke bg-app-green p-4">
+        <div className="mb-1 flex items-center justify-between">
+          <h3 className="font-display text-xl text-app-green-strong">Du är redo!</h3>
+        </div>
+        <p className="mb-4 text-sm text-app-green-strong">
+          Du har gått igenom alla steg och är redo att använda Jobi.sh fullt ut.
+        </p>
+        <button
+          onClick={handleDismiss}
+          className="w-full cursor-pointer rounded-xl bg-app-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-app-primary-strong"
+        >
+          Stäng
+        </button>
+      </article>
+    );
   }
 
   return (
