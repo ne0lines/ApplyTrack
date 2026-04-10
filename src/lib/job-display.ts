@@ -20,46 +20,53 @@ function parseSwedishDate(value: string): Date | null {
   return new Date(Number(match[3]), month, Number(match[1]));
 }
 
+const localeTagMap: Record<string, string> = { en: "en-US", uk: "uk-UA", sv: "sv-SE" };
+
 export function formatStoredDate(value: string, locale: string): string {
   const parsed = parseSwedishDate(value);
   if (!parsed) return value;
-  return new Intl.DateTimeFormat(locale === "en" ? "en-US" : "sv-SE", {
+  return new Intl.DateTimeFormat(localeTagMap[locale] ?? "sv-SE", {
     day: "numeric",
     month: "short",
     year: "numeric",
   }).format(parsed);
 }
 
-const timelineEventEnMap: Record<string, string> = {
-  "jobbet sparat": "Job saved",
-  "jobbet skapat": "Job created",
-  "ansökan skickad": "Application sent",
-  "sista ansökningsdag": "Application deadline",
+const timelineEventTranslations: Record<string, Record<string, string>> = {
+  en: {
+    "jobbet sparat": "Job saved",
+    "jobbet skapat": "Job created",
+    "ansökan skickad": "Application sent",
+    "sista ansökningsdag": "Application deadline",
+  },
+  uk: {
+    "jobbet sparat": "Роботу збережено",
+    "jobbet skapat": "Роботу створено",
+    "ansökan skickad": "Заявку надіслано",
+    "sista ansökningsdag": "Кінцевий термін подачі",
+  },
 };
 
 export function displayTimelineEvent(event: string, locale: string): string {
-  if (locale !== "en") return event;
-  return timelineEventEnMap[event.toLowerCase()] ?? event;
+  const map = timelineEventTranslations[locale];
+  if (!map) return event;
+  return map[event.toLowerCase()] ?? event;
 }
 
-const workloadEnMap: Record<string, string> = {
-  Heltid: "Full-time",
-  Deltid: "Part-time",
+const workloadTranslations: Record<string, Record<string, string>> = {
+  en: { Heltid: "Full-time", Deltid: "Part-time" },
+  uk: { Heltid: "Повна зайнятість", Deltid: "Часткова зайнятість" },
 };
 
-const employmentTypeEnMap: Record<string, string> = {
-  Tillsvidare: "Permanent",
-  Visstid: "Temporary",
-  Provanställning: "Probationary",
-  Konsult: "Consultant",
+const employmentTypeTranslations: Record<string, Record<string, string>> = {
+  en: { Tillsvidare: "Permanent", Visstid: "Temporary", Provanställning: "Probationary", Konsult: "Consultant" },
+  uk: { Tillsvidare: "Безстрокова", Visstid: "Строкова", Provanställning: "Випробувальна", Konsult: "Консультант" },
 };
 
 export function displayWorkload(value: string, locale: string): string {
-  if (locale !== "en") return value;
-  return workloadEnMap[value] ?? value;
+  return workloadTranslations[locale]?.[value] ?? value;
 }
 
 export function displayEmploymentType(value: string, locale: string): string {
-  if (locale !== "en") return value;
-  return employmentTypeEnMap[value] ?? value;
+  return employmentTypeTranslations[locale]?.[value] ?? value;
 }

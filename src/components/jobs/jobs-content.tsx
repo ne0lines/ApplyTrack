@@ -5,12 +5,23 @@ import { trackEvent } from "@/lib/analytics";
 import { Btn } from "@/components/ui/btn";
 import { DeleteJobBtn } from "@/components/jobs/delete-job-btn";
 import { Plus } from "lucide-react";
+import { JobStatus } from "@/app/types";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 export function JobsContent() {
   const { data: jobs = [] } = useJobs();
   const t = useTranslations("jobs");
+  const tStatus = useTranslations("status");
+
+  const statusLabel: Record<string, string> = {
+    [JobStatus.SAVED]: tStatus("saved"),
+    [JobStatus.APPLIED]: tStatus("applied"),
+    [JobStatus.IN_PROCESS]: tStatus("inProcess"),
+    [JobStatus.INTERVIEW]: tStatus("interview"),
+    [JobStatus.OFFER]: tStatus("offer"),
+    [JobStatus.CLOSED]: tStatus("closed"),
+  };
 
   return (
     <section className="flex w-full flex-col gap-4">
@@ -40,7 +51,7 @@ export function JobsContent() {
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
                   <span className="rounded-full bg-app-surface px-3 py-1 text-sm text-app-muted">
-                    {job.status}
+                    {statusLabel[job.status] ?? job.status}
                   </span>
                   <DeleteJobBtn jobId={job.id} />
                 </div>
