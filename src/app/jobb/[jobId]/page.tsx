@@ -29,7 +29,7 @@ export default function JobDetailPage({
       onSuccess: () => {
         toast.success("Jobbet togs bort.");
         setConfirmOpen(false);
-        router.push("/");
+        router.push("/dashboard");
       },
       onError: (error) => {
         toast.error(
@@ -60,7 +60,7 @@ export default function JobDetailPage({
           <p className="text-base text-app-muted sm:text-lg">
             Jobbet kunde inte hittas.
           </p>
-          <Btn href="/" variant="secondary">
+          <Btn href="/dashboard" variant="secondary">
             Tillbaka
           </Btn>
         </section>
@@ -192,8 +192,8 @@ export default function JobDetailPage({
           </article>
           <StatusSelect jobId={job.id} initialStatus={job.status} />
         </div>
-        <div className="flex w-full flex-col gap-3 sm:flex-row sm:gap-4">
-          <Btn variant="secondary" className="w-full sm:w-1/2" href="/" track="back_click">
+        <div className="flex w-full gap-4">
+          <Btn variant="secondary" className="w-1/2" href="/dashboard" track="back_click">
             Tillbaka
           </Btn>
           <Btn

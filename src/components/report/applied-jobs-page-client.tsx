@@ -11,15 +11,13 @@ type AppliedJobsPageClientProps = {
 export function AppliedJobsPageClient({ jobs }: Readonly<AppliedJobsPageClientProps>) {
   if (jobs.length === 0) {
     return (
-      <main className="app-page">
-        <section className="mx-auto app-page-content w-full max-w-3xl md:max-w-none">
-          <div className="app-heading-stack-tight">
-            <h1 className="font-display text-4xl md:text-[2.4rem]">Sökta jobb</h1>
-            <p className="text-lg text-app-muted">
-              Det finns inga registrerade ansökningar att visa ännu.
-            </p>
-          </div>
-          <Btn href="/" variant="secondary" track="back_click">
+      <main className="min-h-svh pt-4">
+        <section className="mx-auto flex w-full max-w-3xl flex-col gap-4 p-5 sm:p-8 md:max-w-none">
+          <h1 className="font-display text-4xl md:text-[2.4rem]">Sökta jobb</h1>
+          <p className="text-lg text-app-muted">
+            Det finns inga registrerade ansökningar att visa ännu.
+          </p>
+          <Btn href="/dashboard" variant="secondary" track="back_click">
             Tillbaka
           </Btn>
         </section>
