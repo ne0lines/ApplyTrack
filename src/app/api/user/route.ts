@@ -169,15 +169,7 @@ export async function PATCH(
     return NextResponse.json({ error: "Inte autentiserad." }, { status: 401 });
   }
 
-  const email = clerkUser.emailAddresses[0]?.emailAddress;
-
-  if (!email) {
-    return NextResponse.json(
-      { error: "Ingen e-postadress hittades." },
-      { status: 400 },
-    );
-  }
-
+  // id is always the Clerk user ID — POST /api/user sets it explicitly on create
   const body = (await req.json()) as PatchUserInput;
   const update: Partial<PatchUserInput> = {};
 
