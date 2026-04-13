@@ -1,4 +1,5 @@
 import type { CreateJobInput, Job, UpdateJobInput, UserOnboardingFlags } from "../types";
+import type { ThemePreference } from "@/lib/theme";
 
 const API_BASE = "/api/jobs";
 
@@ -82,7 +83,7 @@ export async function deleteJob(id: string): Promise<void> {
   }
 }
 
-type PatchUserInput = Partial<UserOnboardingFlags>;
+type PatchUserInput = Partial<UserOnboardingFlags> & { colorScheme?: ThemePreference };
 
 /** PATCH onboarding flags on the current user */
 export async function patchUser(input: PatchUserInput): Promise<void> {

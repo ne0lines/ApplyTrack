@@ -9,6 +9,7 @@ import {
   readStoredThemePreference,
   type ThemePreference,
 } from '@/lib/theme';
+import { patchUser } from '@/app/services/services';
 import {
   createContext,
   useCallback,
@@ -75,6 +76,9 @@ export function ThemeProvider({
     (nextThemePreference: ThemePreference) => {
       persistThemePreference(nextThemePreference);
       applyThemePreference(nextThemePreference);
+      patchUser({ colorScheme: nextThemePreference }).catch((e) =>
+        console.error('[ThemeProvider] Failed to sync colorScheme', e),
+      );
 
       if (globalThis.window !== undefined) {
         globalThis.window.dispatchEvent(
