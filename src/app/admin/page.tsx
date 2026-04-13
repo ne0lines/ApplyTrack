@@ -54,7 +54,7 @@ export default async function AdminPage() {
   ];
 
   return (
-    <main className="min-h-svh bg-[var(--app-bg)] px-4 py-8 md:px-8">
+    <main className="min-h-svh bg-[var(--app-bg)] px-4 py-8 pb-24 md:px-8 md:pb-8">
       <div className="mx-auto max-w-5xl space-y-10">
         <h1 className="font-display text-3xl font-semibold text-[var(--app-ink)]">
           Admin
