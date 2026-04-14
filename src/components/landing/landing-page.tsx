@@ -41,7 +41,7 @@ type JobSearchTip = {
   url?: string;
 };
 
-function getRandomTipId(tips: readonly JobSearchTip[], previousTipId?: string) {
+function getRandomTipId(tips: readonly JobSearchTip[], previousTipId?: string | null) {
   if (tips.length === 0) {
     return null;
   }
@@ -162,6 +162,7 @@ export function LandingPage({ heroHighlights, signedIn }: Readonly<LandingPagePr
       cardClassName: "bg-app-sky text-app-ink",
       iconClassName: "bg-white/75 text-app-primary",
       headingClassName: "text-app-primary",
+      hasExtensionLink: false,
     },
     {
       icon: BarChart3,
@@ -170,6 +171,7 @@ export function LandingPage({ heroHighlights, signedIn }: Readonly<LandingPagePr
       cardClassName: "bg-app-sand text-app-ink md:translate-y-8",
       iconClassName: "bg-white/75 text-app-sand-strong",
       headingClassName: "text-app-sand-strong",
+      hasExtensionLink: false,
     },
     {
       icon: Puzzle,
