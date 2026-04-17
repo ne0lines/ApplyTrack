@@ -415,6 +415,11 @@ export function LandingPage({ heroHighlights, signedIn }: Readonly<LandingPagePr
                     {tLanding("navTestimonials")}
                   </Link>
                 </li>
+                <li>
+                  <Link href="/foretag" className={`${primaryNavLinkClassName} font-semibold text-app-ink`}>
+                    För företag
+                  </Link>
+                </li>
               </ul>
             </nav>
 
