@@ -111,6 +111,7 @@ export function AppNavigationShell({
     pathname === "/" ||
     pathname.startsWith("/auth") ||
     pathname.startsWith("/landing") ||
+    pathname.startsWith("/foretag") ||
     pathname.startsWith("/konto/create-profile") ||
     pathname.startsWith("/terms") ||
     pathname.startsWith("/gdpr") ||
