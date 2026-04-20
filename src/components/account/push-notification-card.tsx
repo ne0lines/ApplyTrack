@@ -59,7 +59,9 @@ function NotificationToggleCard({
         <span
           className={cn(
             "inline-block size-5 rounded-full bg-white transition",
-            checked ? "translate-x-6" : "translate-x-1",
+            checked
+              ? "translate-x-6 rtl:-translate-x-6"
+              : "translate-x-1 rtl:-translate-x-1",
           )}
         />
       </span>
