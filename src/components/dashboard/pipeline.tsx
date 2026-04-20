@@ -79,7 +79,7 @@ export default function Pipeline({ jobs }: Readonly<{ jobs: Job[] }>) {
             {todoItems.map((item) => (
               <Link
                 key={item.id}
-                href={`/jobb/${item.jobId}`}
+                href={`/jobs/${item.jobId}`}
                 className="block rounded-2xl border border-app-stroke bg-app-surface p-4 transition hover:-translate-y-0.5 hover:border-app-primary/30 hover:shadow-sm dark:bg-white/5"
               >
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -123,16 +123,14 @@ export default function Pipeline({ jobs }: Readonly<{ jobs: Job[] }>) {
       <h2 className="font-display -mb-6 text-3xl md:text-[1.75rem]">{t("pipeline")}</h2>
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         {applied.length > 0 && (
-          <>
-            <Board
-              jobs={applied}
-              label={t("boardApplied")}
-              borderColor="border-transparent"
-              bgColor="bg-blue-100 dark:bg-[#123348]"
-              titleClassName="text-[#295a99] dark:text-[#9bc2ff]"
-              itemBgColor="bg-[#295a99]/18 dark:bg-[#9bc2ff]/12"
-            />
-          </>
+          <Board
+            jobs={applied}
+            label={t("boardApplied")}
+            borderColor="border-transparent"
+            bgColor="bg-blue-100 dark:bg-[#123348]"
+            titleClassName="text-[#295a99] dark:text-[#9bc2ff]"
+            itemBgColor="bg-[#295a99]/18 dark:bg-[#9bc2ff]/12"
+          />
         )}
 
         {inProcess.length > 0 && (

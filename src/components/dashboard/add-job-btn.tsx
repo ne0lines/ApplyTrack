@@ -10,7 +10,7 @@ export function AddJobBtn() {
   return (
     <Btn
       className="md:hidden"
-      href="/jobb/new"
+      href="/jobs/new"
       icon={Plus}
       track="add_job_click"
     >

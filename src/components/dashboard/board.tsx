@@ -28,7 +28,7 @@ export default function Board({
         {jobs.map((j) => (
           <li key={`saved-${j.id}`}>
             <Link
-              href={`/jobb/${j.id}`}
+              href={`/jobs/${j.id}`}
               className={cn(
                 borderColor,
                 itemBgColor,

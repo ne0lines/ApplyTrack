@@ -18,7 +18,7 @@ import { useJob, useUpdateJob } from "@/lib/hooks/jobs";
 import { Save } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { use, useState } from "react";
 import { toast } from "sonner";
 
 const initialState: JobFormState = {
@@ -180,10 +180,11 @@ export default function EditJobPage({
   const t = useTranslations("editJob");
   const tNew = useTranslations("newJob");
   const tStatus = useTranslations("status");
-  const [form, setForm] = useState<JobFormState>(initialState);
+  const [draftForms, setDraftForms] = useState<Record<string, JobFormState>>({});
 
   const { data: job, isLoading, isError } = useJob(jobId);
   const updateJobMutation = useUpdateJob();
+  const form = draftForms[jobId] ?? (job ? buildFormState(job) : initialState);
 
   const statusOptions = [
     { value: JobStatus.SAVED, label: tStatus("saved") },
@@ -194,14 +195,14 @@ export default function EditJobPage({
     { value: JobStatus.CLOSED, label: tStatus("closed") },
   ];
 
-  useEffect(() => {
-    if (job) {
-      setForm(buildFormState(job));
-    }
-  }, [job]);
-
   function updateField<K extends keyof JobFormState>(field: K, value: JobFormState[K]) {
-    setForm((prev) => ({ ...prev, [field]: value }));
+    setDraftForms((prev) => ({
+      ...prev,
+      [jobId]: {
+        ...form,
+        [field]: value,
+      },
+    }));
   }
 
   function handleSubmit() {
@@ -230,7 +231,7 @@ export default function EditJobPage({
       {
         onSuccess: () => {
           toast.success(t("saveSuccess"));
-          router.push(`/jobb/${jobId}`);
+          router.push(`/jobs/${jobId}`);
         },
         onError: (error) => {
           toast.error(
@@ -263,7 +264,7 @@ export default function EditJobPage({
         <section className="mx-auto flex w-full max-w-3xl flex-col gap-4 p-5 sm:p-8 md:max-w-none">
           <h1 className="font-display text-4xl md:text-[2.4rem]">{t("title")}</h1>
           <p className="text-base text-app-muted sm:text-lg">{t("notFound")}</p>
-          <Btn href={`/jobb/${jobId}`} variant="secondary">
+          <Btn href={`/jobs/${jobId}`} variant="secondary">
             {t("back")}
           </Btn>
         </section>
@@ -467,7 +468,7 @@ export default function EditJobPage({
             </label>
 
             <div className="flex gap-4">
-              <Btn href={`/jobb/${jobId}`} variant="secondary" className="w-1/2">
+              <Btn href={`/jobs/${jobId}`} variant="secondary" className="w-1/2">
                 {t("cancelBtn")}
               </Btn>
               <Btn disabled={updateJobMutation.isPending} type="submit" className="w-full" icon={Save}>

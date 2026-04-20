@@ -261,7 +261,7 @@ export function createTodoPushPayload(todoItem: TodoItem): PushNotificationPaylo
     icon: "/icons/Assets.xcassets/AppIcon.appiconset/192.png",
     tag: `todo-${todoItem.id}`,
     title: `Ny att göra: ${todoItem.title}`,
-    url: `/jobb/${todoItem.jobId}`,
+    url: `/jobs/${todoItem.jobId}`,
   };
 }
 

@@ -316,7 +316,7 @@ export default function NewJobPage() {
     createJob.mutate(payload, {
       onSuccess: (createdJob) => {
         toast.success(t("saveSuccess"));
-        router.push(`/jobb/${createdJob.id}`);
+        router.push(`/jobs/${createdJob.id}`);
       },
       onError: (error) => {
         const message = error instanceof Error ? error.message : t("saveError");
@@ -328,7 +328,7 @@ export default function NewJobPage() {
 
   const handleSubmit: React.ComponentProps<"form">["onSubmit"] = (event) => {
     event.preventDefault();
-    void submitJob();
+    submitJob();
   };
 
   return (

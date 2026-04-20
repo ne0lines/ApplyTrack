@@ -20,7 +20,7 @@ function JobList({ jobs, showArchivedBadge = false, statusLabel, archivedLabel }
     <ul className="space-y-3">
       {jobs.map((job) => (
         <li key={job.id} className="relative app-card-dense transition hover:-translate-y-0.5 hover:shadow-sm">
-          <Link href={`/jobb/${job.id}`}>
+          <Link href={`/jobs/${job.id}`}>
             <span className="absolute inset-0 rounded-2xl" aria-hidden="true" />
           </Link>
           <div className="flex items-center justify-between gap-3">
@@ -74,7 +74,7 @@ export function JobsContent() {
         <div className="app-heading-stack-tight">
           <h1 className="font-display text-4xl sm:text-6xl">{t("title")}</h1>
         </div>
-        <Btn href="/jobb/new" icon={Plus} track="add_job_click">{t("addBtn")}</Btn>
+        <Btn href="/jobs/new" icon={Plus} track="add_job_click">{t("addBtn")}</Btn>
       </div>
 
       {jobs.length === 0 ? <p className="text-base text-app-muted">{t("empty")}</p> : null}

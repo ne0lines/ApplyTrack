@@ -158,7 +158,7 @@ export default function JobDetailPage({
               {t("visitPosting")}
             </Btn>
             <Btn
-              href={`/jobb/${job.id}/edit`}
+              href={`/jobs/${job.id}/edit`}
               className="w-full"
               icon={PencilLine}
               variant="secondary"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import type { Job, UserOnboardingFlags } from "@/app/types";
@@ -16,10 +16,10 @@ type Step = {
 export function OnboardingChecklist({
   jobs,
   userFlags,
-}: {
+}: Readonly<{
   jobs: Job[];
   userFlags: UserOnboardingFlags;
-}) {
+}>) {
   const [dismissed, setDismissed] = useState(false);
 
   const step1Done = jobs.length > 0;
@@ -32,12 +32,12 @@ export function OnboardingChecklist({
     {
       label: "Lägg till ditt första jobb",
       done: step1Done,
-      href: "/jobb/new",
+      href: "/jobs/new",
     },
     {
       label: "Uppdatera ett jobbs status",
       done: step2Done,
-      href: jobs.length > 0 ? `/jobb/${jobs[0].id}` : "/jobb/new",
+      href: jobs.length > 0 ? `/jobs/${jobs[0].id}` : "/jobs/new",
     },
     {
       label: "Utforska din pipeline",
@@ -47,7 +47,7 @@ export function OnboardingChecklist({
     {
       label: "Skapa en aktivitetsrapport",
       done: step4Done,
-      href: "/aktivitetsrapport",
+      href: "/activity-report",
     },
   ];
 

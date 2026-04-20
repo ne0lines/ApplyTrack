@@ -39,7 +39,7 @@ export default async function ActivityReportPage() {
   ]);
 
   if (applications.length === 0) {
-    redirect("/jobb/new");
+    redirect("/jobs/new");
   }
 
   const { jobs, options } = getReportPageData(applications);

@@ -4,14 +4,13 @@ import { LogoutBtn } from "@/components/auth/logout-btn";
 import { Btn } from "@/components/ui/btn";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { cn } from "@/lib/utils";
-import { BriefcaseBusiness, House, Plus, Puzzle, UserRound } from "lucide-react";
+import { BriefcaseBusiness, House, LucideIcon, Plus, Puzzle, ShieldCheck, UserRound } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUser } from "@/lib/hooks/user";
 import { UserRole } from "@/app/types";
-import { ShieldCheck, LucideIcon } from "lucide-react";
 
 type NavItem =
   | {
@@ -78,22 +77,22 @@ export function AppNavigationShell({
       match: (p: string) => p === "/dashboard",
     },
     {
-      href: "/jobb",
+      href: "/jobs",
       icon: BriefcaseBusiness,
       label: t("jobs"),
-      match: (p: string) => p.startsWith("/jobb"),
+      match: (p: string) => p.startsWith("/jobs"),
     },
     {
-      href: "/konto",
+      href: "/account",
       icon: UserRound,
       label: t("profile"),
-      match: (p: string) => p.startsWith("/konto"),
+      match: (p: string) => p.startsWith("/account"),
     },
     {
-      href: "/aktivitetsrapport",
+      href: "/activity-report",
       iconSrc: "/ams-logo.svg",
       label: t("activityReport"),
-      match: (p: string) => p.startsWith("/aktivitetsrapport"),
+      match: (p: string) => p.startsWith("/activity-report"),
     },
     ...(user?.role === UserRole.ADMIN
       ? [
@@ -111,8 +110,8 @@ export function AppNavigationShell({
     pathname === "/" ||
     pathname.startsWith("/auth") ||
     pathname.startsWith("/landing") ||
-    pathname.startsWith("/foretag") ||
-    pathname.startsWith("/konto/create-profile") ||
+    pathname.startsWith("/company") ||
+    pathname.startsWith("/account/create-profile") ||
     pathname.startsWith("/terms") ||
     pathname.startsWith("/gdpr") ||
     pathname.startsWith("/privacy");
@@ -137,7 +136,7 @@ export function AppNavigationShell({
                 <nav aria-label={t("primaryNav")} className="mt-8 flex flex-col gap-2">
                   {navItems.map((item) => {
                     const isActive = item.match(pathname);
-                    const isActivityReport = item.href === "/aktivitetsrapport";
+                    const isActivityReport = item.href === "/activity-report";
 
                     return (
                       <Link
@@ -197,7 +196,7 @@ export function AppNavigationShell({
 
                 <div className="mt-auto flex flex-col gap-3 pt-6">
                   <LanguageSwitcher />
-                  <Btn className="w-full" href="/jobb/new" icon={Plus} track="add_job_click">
+                  <Btn className="w-full" href="/jobs/new" icon={Plus} track="add_job_click">
                     {t("addJob")}
                   </Btn>
                   <LogoutBtn className="w-full" />
@@ -224,7 +223,7 @@ export function AppNavigationShell({
             >
               {navItems.map((item) => {
                 const isActive = item.match(pathname);
-                const isActivityReport = item.href === "/aktivitetsrapport";
+                const isActivityReport = item.href === "/activity-report";
 
                 return (
                   <Link
