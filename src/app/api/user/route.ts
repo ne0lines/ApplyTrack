@@ -68,7 +68,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   }
 
   if (!dbData) {
-    return NextResponse.redirect(new URL("/konto/create-profile", req.url));
+    return NextResponse.redirect(new URL("/account/create-profile", req.url));
   }
 
   return NextResponse.json(dbData as User);
@@ -183,9 +183,9 @@ export async function PATCH(
   const body = (await req.json()) as PatchUserInput;
   const update: Partial<PatchUserInput> = {};
 
-  if (typeof body.name !== undefined) update.name = body.name;
-  if (typeof body.profession !== undefined) update.profession = body.profession;
-  if (typeof body.email !== undefined) update.email = body.email;
+  if (typeof body.name !== "undefined") update.name = body.name;
+  if (typeof body.profession !== "undefined") update.profession = body.profession;
+  if (typeof body.email !== "undefined") update.email = body.email;
   if (typeof body.onboardingDismissed === "boolean") {
     update.onboardingDismissed = body.onboardingDismissed;
   }

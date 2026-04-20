@@ -105,7 +105,7 @@ async function openJobImportPage(sourceUrl) {
   }
 
   const origin = await resolveJobishOrigin();
-  const importUrl = new URL("/jobb/new", origin);
+  const importUrl = new URL("/jobs/new", origin);
   importUrl.searchParams.set("url", sourceUrl);
 
   const matchingTabs = await chrome.tabs.query({ url: `${origin}/*` });
@@ -160,9 +160,7 @@ chrome.contextMenus.onClicked.addListener((info) => {
     return;
   }
 
-  void openJobImportPage(info.linkUrl).catch(() => {
-    return undefined;
-  });
+  openJobImportPage(info.linkUrl).catch(() => undefined);
 });
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {

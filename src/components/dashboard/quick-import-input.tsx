@@ -18,7 +18,7 @@ export function QuickImportInput() {
       return;
     }
 
-    router.push(`/jobb/new?url=${encodeURIComponent(trimmedValue)}`);
+    router.push(`/jobs/new?url=${encodeURIComponent(trimmedValue)}`);
   }
 
   return (

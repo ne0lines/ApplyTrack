@@ -10,7 +10,7 @@ import {
   MessageSquareWarning,
 } from "lucide-react";
 
-export default function ForetagPage() {
+export default function CompanyPage() {
   return (
     <div className="min-h-svh w-full pb-0 md:mx-auto md:max-w-270 md:px-4">
       <div className="relative isolate overflow-hidden rounded-[2rem] flex flex-col gap-14 bg-[radial-gradient(circle_at_top_left,rgba(110,51,235,0.16),transparent_28%),radial-gradient(circle_at_82%_18%,rgba(14,107,140,0.10),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.98),rgba(243,244,248,0.92))] shadow-[0_24px_80px_rgba(17,23,40,0.08)] ring-1 ring-black/5 dark:bg-[radial-gradient(circle_at_top_left,rgba(110,51,235,0.24),transparent_28%),radial-gradient(circle_at_82%_18%,rgba(14,107,140,0.14),transparent_24%),linear-gradient(180deg,rgba(24,24,27,0.96),rgba(9,9,9,0.98))] dark:ring-white/10">

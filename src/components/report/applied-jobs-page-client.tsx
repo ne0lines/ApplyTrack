@@ -39,7 +39,7 @@ export function AppliedJobsPageClient({ jobs }: Readonly<AppliedJobsPageClientPr
           {jobs.map((job) => (
             <Link
               key={job.id}
-              href={`/jobb/${job.id}`}
+              href={`/jobs/${job.id}`}
               className="app-card-dense transition hover:-translate-y-0.5 hover:border-app-primary/35 hover:shadow-sm"
             >
               <div className="app-card-stack">

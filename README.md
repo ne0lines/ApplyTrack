@@ -162,13 +162,14 @@ Några centrala sidor i appen:
 | --- | --- | --- |
 | `/` | Server | Dashboard med jobböversikt |
 | `/auth` | Server/Client | Clerk-baserat auth-flöde |
-| `/jobb` | Server | Lista över jobb |
-| `/jobb/new` | Client | Skapa nytt jobb eller importera från annonslänk |
-| `/jobb/[jobId]` | Client | Detaljsida för ett jobb |
-| `/jobb/[jobId]/edit` | Client | Redigera befintligt jobb |
-| `/konto` | Client | Kontosida |
-| `/konto/create-profile` | Client | Skapa eller komplettera användarprofil |
-| `/aktivitetsrapport` | Server | Rapportvy för Arbetsförmedlingen |
+| `/company` | Server | Landningssida för företag och Rusta och Matcha-aktörer |
+| `/jobs` | Server | Lista över jobb |
+| `/jobs/new` | Client | Skapa nytt jobb eller importera från annonslänk |
+| `/jobs/[jobId]` | Client | Detaljsida för ett jobb |
+| `/jobs/[jobId]/edit` | Client | Redigera befintligt jobb |
+| `/account` | Client | Kontosida |
+| `/account/create-profile` | Client | Skapa eller komplettera användarprofil |
+| `/activity-report` | Server | Rapportvy för Arbetsförmedlingen |
 | `/report` | Server | Delad report-datakälla i egen vy |
 | `/extension` | Server | Info om browser extension och store-länkar |
 | `/privacy` | Server | Integritetspolicy |
@@ -281,15 +282,16 @@ src/
       sentry-example-api/
       user/
     auth/[[...auth]]/
-    aktivitetsrapport/
+    activity-report/
+    company/
     extension/
     gdpr/
     generated/prisma/
-    jobb/
+    jobs/
       [jobId]/
         edit/
       new/
-    konto/
+    account/
       create-profile/
     loader/
     privacy/
@@ -368,8 +370,8 @@ Repot innehåller en lokal browser extension i `chrome-extension/` som knyter ih
 
 Den används till två huvudsakliga flöden:
 
-1. Skicka jobb från `/aktivitetsrapport` till Arbetsförmedlingens formulär.
-2. Lägg till jobb från Platsbanken direkt till `/jobb/new`.
+1. Skicka jobb från `/activity-report` till Arbetsförmedlingens formulär.
+2. Lägg till jobb från Platsbanken direkt till `/jobs/new`.
 
 ### Lokal installation i Chrome
 

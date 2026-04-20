@@ -416,7 +416,7 @@ export function LandingPage({ heroHighlights, signedIn }: Readonly<LandingPagePr
                   </Link>
                 </li>
                 <li>
-                  <Link href="/foretag" className={`${primaryNavLinkClassName} font-semibold text-app-ink`}>
+                  <Link href="/company" className={`${primaryNavLinkClassName} font-semibold text-app-ink`}>
                     För företag
                   </Link>
                 </li>
